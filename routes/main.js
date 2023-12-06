@@ -174,7 +174,7 @@ app.post("/registered", function(req,res){
         if (err) {
         return console.error(err.message);
         } else {
-            res.redirect("../login")
+            res.redirect("./login")
         }
     });
 })

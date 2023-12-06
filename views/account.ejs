@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Welcome to <%=forumName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script> 
+
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm justifycontent-center">
+    
+      <div class="container-fluid">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+        <a class="nav-link" href="/"><%=forumName%></a>
+        </li>
+        <li class="nav-item dropdown">
+          <% if(session.user_id) {%>
+          <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Account
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/account"> Settings </a>
+            <a class="dropdown-item" href="/logout"> Logout </a>
+          </div>
+          <%} else{%>
+            <a class="nav-link" href="/login">Login</a>
+         <%}%>
+        </li>
+      </ul>
+      <form action="/search-result" method="GET" class="d-flex">
+        <input class="form-control" name="keyword" placeholder="Search for Topics">
+        <button class="btn btn-outline-success form-inline" type="submit" style="display:inline-block">Search</button>
+      </form>
+    </div>
+  </nav>
+  
+  
+    <% if(session.user_id) {%>
+      <h1 class="mt-5 mb-5">Welcome <%=accountInfo[0].Username%> </h1>
+
+      <h5 class="container-fluid text-center">Your Details</h5>
+      <!-- Firstname -->
+
+      <% for(const [key,value] of Object.entries({Firstname: accountInfo[0].FirstName, Lastname: accountInfo[0].LastName, Email: accountInfo[0].Email, Username: accountInfo[0].Username,Password: "Change Password"})){%>
+
+        <div class="card container-fluid">
+          <div class="card-body">
+            <h5 class="card-title"><%=key%></h5>
+            <p class="card-text"> <%=value%> <button type="button" class="btn btn-primary float-end translate-middle-y" data-bs-toggle="modal" data-bs-target="<%=`#change${key}`%>">Change</button> </p>
+          </div>
+        </div>
+
+        <div class="modal fade" id="<%=`change${key}`%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Would you like to change your <%=key%>? </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="<%=`/account/change/${key}`.toLowerCase()%>" method="POST">
+                <div class="form-group">
+                <div class="modal-body">
+                  <%if(key == "Email"){%><div class="modal-content mb-3 text-center"><%=`Change from: ${value}`%></div> 
+                  <input type="email" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>" aria-describedby="emailHelp" placeholder="Enter <%=`${key}`%>" required>
+                  <%}else if(key != "Password"){%>
+                    <div class="modal-content mb-3 text-center"><%=`Change from: ${value}`%></div> 
+                  <input type="text" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>" aria-describedby="emailHelp" placeholder="Enter <%=`${key}`%>" required>
+                  <%} else {%>
+                    <input type="password" class="form-control mb-3" id="oldpassword" name="oldpassword" aria-describedby="emailHelp" placeholder="Enter Old <%=`${key}`%>" required>
+                    <input type="password" class="form-control" id="newpassword" name="newpassword" aria-describedby="emailHelp" placeholder="Enter New <%=`${key}`%>" required>
+                  <%}%>
+                 
+          
+              </div>
+              <div class="modal-footer">
+                <button type ="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Change">
+              </div>
+        
+            </form>
+            </div>
+          </div>
+        </div>
+        </div>
+
+
+
+      <%}%>
+
+
+      <h5 class="mt-5 text-center">Your Topics</h5>
+      <div class="card container-fluid align-items-center">
+      <% new Set(accountInfo.map(({topicTitle})=>topicTitle)).forEach((title)=>{%> <!-- creates a set from the titles -->
+
+          <a href="<%= `topics/${title}/posts` %>" class="topic"><%=title%></a>
+          <div class="d-grid gap-2 d-md-flex position-relative">
+          <button class="dropdown-toggle btn" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+          </svg></button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="<%=`/topics/${title}/posts/delete`%>">Delete Topic <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+              <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+            </svg></a></li>
+            <li><a class="dropdown-item" href="<%=`/topics/${title}/posts/edit`%>">Edit Topic <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+              <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+            </svg></a></li>
+          </ul>
+        </div>
+        
+
+        
+    
+      <% }); %>
+    </div>
+    
+      <h5 class="mt-5 text-center">Your Posts</h5>
+      <% accountInfo.forEach((info)=>{%>
+        <% console.log(info)%>
+        <div class="card container-fluid">
+          <div class="card-body">
+            <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/info.postTitle`%>"><%=info.topicTitle%>: <%=info.postTitle%></a></h5>
+            <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
+            <p class="card-text"> <%=info.postContent%> </p>
+          </div>
+          <div class="card-footer container-fluid" id="collapseComments" style="background-color: #f8f9fa;">
+            <button class="card-text dropdown-toggle btn" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+              <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+            </svg></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a role="button" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete<%=`${info.postID}`%>">Delete Post <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+              </svg></a></li>
+              <!-- item to edit post-->
+              <li>
+                <a role="button" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#change<%=`${info.postID}`%>">Edit Post <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+              </svg></a>
+        
+              
+            </li> 
+            
+              
+              
+            </ul>
+          </div>
+        </div>
+
+        <!-- Modal to Edit the Post -->
+        <div class="modal fade" id="change<%=`${info.postID}`%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Edit your Post </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="<%=`/topics/${info.topicTitle}/posts/${info.postID}/edit`%>" method="POST">
+                <div class="form-group">
+                <div class="modal-body">
+                    <input class="form-control mb-3" id="newtitle" name="newtitle" type="text" value="<%=info.postTitle%>">
+                    <textarea class="form-control mb-3" id="newcontent" name="newcontent"><%=info.postContent%></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Change">
+              </div>
+        
+            </form>
+            </div>
+          </div>
+        </div>
+        </div>
+        <!-- Modal to Delete the Post -->
+        <div class="modal fade" id="delete<%=`${info.postID}`%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Are you sure you want to delete your post? </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="<%=`/topics/${info.topicTitle}/posts/${info.postID}/delete`%>" method="POST">
+                <div class="form-group">
+              <!-- Align items to Center -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Delete">
+              </div>
+        
+            </form>
+            </div>
+          </div>
+        </div>
+        </div>
+    
+      <% }); %>
+
+    <%}else{%>
+      <h2 class="text-center mt-5">Please Login to View Account Details</h2> 
+    <%}%>
+  </body>
+</html>

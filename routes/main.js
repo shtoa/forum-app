@@ -279,7 +279,7 @@ app.post('/account/change/:property',function(req,res){
                 
                 if(req.params.property == "password"){
                     if(result[0].Password != req.body.oldpassword){
-                        res.send('<script>window.location.href = "/account"; alert("Wrong Old Password"); </script>');
+                        res.send('<script>window.location.href = "./account"; alert("Wrong Old Password"); </script>');
                     } else {
                         let userUpdated = `UPDATE users set ${req.params.property.charAt(0).toUpperCase() + req.params.property.slice(1)} = "${req.body.newpassword}" where UserID = "${req.session.user_id}"`
                         
@@ -287,7 +287,7 @@ app.post('/account/change/:property',function(req,res){
                             if (err) {
                                 return console.error(err.message);
                             }else{
-                                res.send('<script>window.location.href = "/account"; alert("Password Changed"); </script>');
+                                res.send('<script>window.location.href = "./account"; alert("Password Changed"); </script>');
                             }
                         });
             }
@@ -298,7 +298,7 @@ app.post('/account/change/:property',function(req,res){
                         if (err) {
                             return console.error(err.message);
                         } else{
-                            res.redirect("../account");
+                            res.redirect("./account");
                         }
                     });
                 }

@@ -74,7 +74,7 @@ module.exports = function(app, forumData) {
             if (err) {
             return console.error(err.message);
             } else {
-                res.redirect(`../topics/${newrecord[0]}/posts`)
+                res.redirect(`./topics/${newrecord[0]}/posts`)
             }
         });
 
@@ -105,7 +105,7 @@ module.exports = function(app, forumData) {
             return console.error(err.message);
    
             } else {
-                res.redirect(`../topics/${topic}/posts/${result.insertId}/${newrecord[0]}`)
+                res.redirect(`./topics/${topic}/posts/${result.insertId}/${newrecord[0]}`)
             }
         });
 

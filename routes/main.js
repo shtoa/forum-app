@@ -298,7 +298,7 @@ app.post('/account/change/:property',function(req,res){
                         if (err) {
                             return console.error(err.message);
                         } else{
-                            res.redirect("./");
+                            res.redirect("../");
                         }
                     });
                 }

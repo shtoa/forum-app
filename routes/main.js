@@ -9,7 +9,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(topicsQuery, (err, result) => {
                     if (err) {
-                        res.redirect('./'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let topicData = Object.assign({}, forumData, {availableTopics:result, session: req.session});
@@ -26,7 +26,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(postsQuery, (err, result) => {
                     if (err) {
-                        res.redirect('./'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let postsData = Object.assign({}, forumData, {availablePosts:result, topic: req.params.topic,session: req.session});
@@ -51,7 +51,7 @@ module.exports = function(app, forumData) {
 
         db.query(postQuery, (err, result) => {
             if (err) {
-                res.redirect('./'); 
+                res.redirect('/'); 
                 console.log(err)
             }
             console.log(result);
@@ -129,7 +129,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(sqlquery, (err, result) => {
                     if (err) {
-                        res.redirect('./'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let searchData = Object.assign({}, forumData, {availableResults:result, keyword: req.query.keyword, session: req.session});
@@ -144,7 +144,7 @@ module.exports = function(app, forumData) {
         // execute sql query
         db.query(sqlquery, (err, result) => {
             if (err) {
-                res.redirect('./',forumData); 
+                res.redirect('/',forumData); 
                 console.log(err)
             }
             let searchData = Object.assign({}, forumData, {availableResults:result, keyword: req.query.keyword, session: req.session});
@@ -174,7 +174,7 @@ app.post("/registered", function(req,res){
         if (err) {
         return console.error(err.message);
         } else {
-            res.redirect("/login")
+            res.redirect("../login")
         }
     });
 })
@@ -191,7 +191,7 @@ app.post("/login", function(req,res,next){
         let loginQuery = `SELECT * from users where Email = "${user_email}"`;
         db.query(loginQuery, (err, result) => {
             if (err) {
-                res.redirect('./'); 
+                res.redirect('/'); 
                 console.log(err)
             }
 

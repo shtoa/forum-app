@@ -318,7 +318,7 @@ app.post('/topics/:topicTitle/posts/:postID/edit',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("./");
+            res.redirect("./topics");
         }
     });
 
@@ -331,7 +331,7 @@ app.post('/topics/:topicTitle/posts/:postID/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("./");
+            res.redirect("./topics");
         }
     });
 

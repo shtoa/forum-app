@@ -214,12 +214,12 @@ app.post("/login", function(req,res,next){
 app.get('/logout',function(req,res,next){
     
     req.session.destroy();
-    res.redirect("../")
+    res.redirect("/")
 
 })
                   
 app.get('/account',function(req,res){
-
+    // this breaks if there arent any posts
     let accountQuery = `SELECT *  FROM (SELECT posts.PostID as postID, posts.Title as postTitle, posts.Content as postContent, 
         posts.CreatedAt as postCreatedAt, topics.Title as topicTitle, 
         topics.CreatedAt as topicCreatedAt, posts.UserID

@@ -191,22 +191,22 @@ app.post("/login", function(req,res,next){
         let loginQuery = `SELECT * from users where Email = "${user_email}"`;
         db.query(loginQuery, (err, result) => {
             if (err) {
-                res.redirect('../'); 
+                res.redirect('./'); 
                 console.log(err)
             }
 
             if(result[0].Password == user_password){
                 req.session.user_id = result[0].UserID;
                 console.log(req.session)
-                res.redirect("../")
+                res.redirect("./")
             } else {
-                res.send('<script>window.location.href = "/login"; alert("Incorrect Email or Password"); </script>')
+                res.send('<script>window.location.href = "./login"; alert("Incorrect Email or Password"); </script>')
             }
          });
 
     } else {
 
-        res.send('<script>window.location.href = "/"; alert("Please Enter Email and Password"); </script>');
+        res.send('<script>window.location.href = "./"; alert("Please Enter Email and Password"); </script>');
     }
 
 })

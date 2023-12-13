@@ -160,7 +160,7 @@
       <%}else {%>
       <% new Set(userResults.map(({Username})=>Username)).forEach((Username)=>{%> <!-- creates a set from the titles -->
 
-          <a href="<%= `/users/${Username}` %>" class="topic"><%=Username%></a>
+          <a href="<%= `/user/${Username}` %>" class="topic"><%=Username%></a>
 
       <% }); %>
       <%}%>

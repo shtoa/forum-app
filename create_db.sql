@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`users` (
   `FirstName` VARCHAR(45) NOT NULL,
   `LastName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`UserID`),
-  UNIQUE INDEX `Username` (`Username` ASC) VISIBLE,
-  UNIQUE INDEX `Email` (`Email` ASC) VISIBLE,
-  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC) VISIBLE)
+  UNIQUE INDEX `Username` (`Username` ASC) ,
+  UNIQUE INDEX `Email` (`Email` ASC) ,
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = utf8mb4
@@ -46,9 +46,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`topics` (
   `UserID` INT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`TopicID`),
-  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC) VISIBLE,
-  UNIQUE INDEX `TopicID_UNIQUE` (`TopicID` ASC) VISIBLE,
-  INDEX `UserId_topics` (`UserID` ASC) VISIBLE,
+  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC) ,
+  UNIQUE INDEX `TopicID_UNIQUE` (`TopicID` ASC) ,
+  INDEX `UserId_topics` (`UserID` ASC) ,
   CONSTRAINT `UserId_topics`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`posts` (
   `Content` TEXT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`PostID`),
-  UNIQUE INDEX `PostID_UNIQUE` (`PostID` ASC) VISIBLE,
-  INDEX `TopicId_idx` (`TopicID` ASC) VISIBLE,
-  INDEX `UserId_idx` (`UserID` ASC) VISIBLE,
+  UNIQUE INDEX `PostID_UNIQUE` (`PostID` ASC) ,
+  INDEX `TopicId_idx` (`TopicID` ASC) ,
+  INDEX `UserId_idx` (`UserID` ASC) ,
   CONSTRAINT `TopicId_posts`
     FOREIGN KEY (`TopicID`)
     REFERENCES `forum_app`.`topics` (`TopicID`),
@@ -95,10 +95,10 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`replies` (
   `Content` TEXT NOT NULL,
   `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ReplyID`),
-  UNIQUE INDEX `replyId_UNIQUE` (`ReplyID` ASC) VISIBLE,
-  INDEX `UserId_replies_idx` (`UserID` ASC) VISIBLE,
-  INDEX `PostId_replies_idx` (`PostID` ASC) VISIBLE,
-  INDEX `ParentId_replies_idx` (`ParentID` ASC) VISIBLE,
+  UNIQUE INDEX `replyId_UNIQUE` (`ReplyID` ASC) ,
+  INDEX `UserId_replies_idx` (`UserID` ASC) ,
+  INDEX `PostId_replies_idx` (`PostID` ASC) ,
+  INDEX `ParentId_replies_idx` (`ParentID` ASC) ,
   CONSTRAINT `ParentId_replies`
     FOREIGN KEY (`ParentID`)
     REFERENCES `forum_app`.`replies` (`ReplyID`),
@@ -124,10 +124,10 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`dislikes` (
   `UserID` INT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`DislikeID`),
-  UNIQUE INDEX `DislikeID_UNIQUE` (`DislikeID` ASC) VISIBLE,
-  INDEX `UserID_dislikes_idx` (`UserID` ASC) VISIBLE,
-  INDEX `ReplyID_dislikes_idx` (`ReplyID` ASC) VISIBLE,
-  INDEX `PostID_dislikes_idx` (`PostID` ASC) VISIBLE,
+  UNIQUE INDEX `DislikeID_UNIQUE` (`DislikeID` ASC) ,
+  INDEX `UserID_dislikes_idx` (`UserID` ASC) ,
+  INDEX `ReplyID_dislikes_idx` (`ReplyID` ASC) ,
+  INDEX `PostID_dislikes_idx` (`PostID` ASC) ,
   CONSTRAINT `PostID_dislikes`
     FOREIGN KEY (`PostID`)
     REFERENCES `forum_app`.`posts` (`PostID`),
@@ -152,10 +152,10 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`likes` (
   `ReplyID` INT NULL DEFAULT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`LikeID`),
-  UNIQUE INDEX `LikeID_UNIQUE` (`LikeID` ASC) VISIBLE,
-  INDEX `PostId_likes_idx` (`PostID` ASC) VISIBLE,
-  INDEX `UserId_likes_idx` (`UserID` ASC) VISIBLE,
-  INDEX `ReplyId_likes_idx` (`ReplyID` ASC) VISIBLE,
+  UNIQUE INDEX `LikeID_UNIQUE` (`LikeID` ASC) ,
+  INDEX `PostId_likes_idx` (`PostID` ASC) ,
+  INDEX `UserId_likes_idx` (`UserID` ASC) ,
+  INDEX `ReplyId_likes_idx` (`ReplyID` ASC) ,
   CONSTRAINT `PostId_likes`
     FOREIGN KEY (`PostID`)
     REFERENCES `forum_app`.`posts` (`PostID`),
@@ -179,10 +179,10 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`members` (
   `TopicID` INT NOT NULL,
   `UserID` INT NOT NULL,
   PRIMARY KEY (`MemberID`),
-  UNIQUE INDEX `MemberID_UNIQUE` (`MemberID` ASC) VISIBLE,
-  UNIQUE INDEX `Unique_Combo` (`TopicID` ASC, `UserID` ASC) VISIBLE,
-  INDEX `UserID_idx` (`UserID` ASC) VISIBLE,
-  INDEX `TopicID_idx` (`TopicID` ASC) VISIBLE,
+  UNIQUE INDEX `MemberID_UNIQUE` (`MemberID` ASC) ,
+  UNIQUE INDEX `Unique_Combo` (`TopicID` ASC, `UserID` ASC) ,
+  INDEX `UserID_idx` (`UserID` ASC) ,
+  INDEX `TopicID_idx` (`TopicID` ASC) ,
   CONSTRAINT `TopicID`
     FOREIGN KEY (`TopicID`)
     REFERENCES `forum_app`.`topics` (`TopicID`),

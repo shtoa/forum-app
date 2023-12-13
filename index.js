@@ -10,7 +10,8 @@ const db = mysql.createConnection ({
     host: 'localhost',
     user: 'appuser',
     password: 'app2027',
-    database: 'forum_app'
+    database: 'forum_app',
+    multipleStatements: true,
 });
 // Connect to the database
 db.connect((err) => {

@@ -45,5 +45,73 @@
       <input id="search-box" type="text" name="keyword" placeholder= "Search something fun">
       <input type="submit" value="Search">
     </form>
+    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> What would you like to post? </h5>
+            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="/postadded" method="POST">
+            <div class="form-group">
+            <div class="modal-body">
+              <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
+              <datalist class="mb-3" id="topicSelect">
+                <% new Set(availableTopics.map(({Title})=>Title)).forEach((title)=>{%>
+                  
+                  <%{%>
+                  <option name="topic" value="<%=title%>"><%=title%></option>
+                  <%}%>
+                  <%});%>
+    
+    
+              </datalist>
+              
+              
+           
+      
+            
+              <input type="text" class="form-control mb-3" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" required>
+              <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
+          </div>
+         
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input class="btn btn-primary" type="submit" value="Add">
+          </div>
+    
+        </form>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> What topic would you like to add? </h5>
+            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="/topicadded" method="POST">
+            <div class="form-group">
+            <div class="modal-body">
+           
+              <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+      
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input class="btn btn-primary" type="submit" value="Add">
+          </div>
+    
+        </form>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    
+    
+    
   </body>
 </html>

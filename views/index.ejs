@@ -12,12 +12,14 @@
 
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-sm justifycontent-center">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm container-fluid">
     
-      <div class="container-fluid">
-      <ul class="navbar-nav mr-auto">
+     
+      <ul class="navbar-nav container-fluid">
         <li class="nav-item">
-        <a class="nav-link" href="/"><%=forumName%></a>
+        <a class="nav-link d-inline-flex" href="/"><svg class="d-inline-block me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+          <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+        </svg> <%=forumName%></a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,19 +53,6 @@
             })
             </script>
         </li>
-        <li class="nav-item dropdown">
-          <% if(session.user_id) {%>
-          <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Account
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="/account"> Settings </a>
-            <a class="dropdown-item" href="/logout"> Logout </a>
-          </div>
-          <%} else{%>
-            <a class="nav-link" href="/login">Login</a>
-         <%}%>
-        </li>
         <li class="nav-item">
           <% if(session.user_id) {%>
             <div class="btn-group dropdown">
@@ -77,12 +66,29 @@
           </div>
           <% }%>
         </li>
+      <li class="nav-item container-fluid ms-10">
+        <form action="/search-result" method="GET" class="d-flex">
+          <input class="form-control" name="keyword" placeholder="Search My4uM">
+          <button class="btn btn-outline-success form-inline ms-1" type="submit">Search</button>
+        </form>
+      </li>
+        <li class="nav-item dropdown float-end">
+          <% if(session.user_id) {%>
+          <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Account
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/account"> Settings </a>
+            <a class="dropdown-item" href="/logout"> Logout </a>
+          </div>
+          <%} else{%>
+            <a class="nav-link" href="/login">Login</a>
+         <%}%>
+        </li>
       </ul>
-      <form action="/search-result" method="GET" class="d-flex">
-        <input class="form-control" name="keyword" placeholder="Search My4uM">
-        <button class="btn btn-outline-success form-inline" type="submit" style="display:inline-block">Search</button>
-      </form>
-    </div>
+      
+      
+
   </nav>
   <h1 class="mt-5"><%=forumName%></h1>
     <!-- <p><a href="/"><%=forumName%></a></p>
@@ -107,14 +113,25 @@
      -->
  
 
-  <h4 style="width:70%; display:flex; flex-direction:column;margin:auto;"> Recent Topics </h4>
-  <ul style="list-style:none;" class="topic-container">
-  <% availableTopics.forEach((topic)=>{%>
+  <h4 class="container-fluid mt-3 mb-3"> Recent Posts   <button class="dropdown-toggle btn btn-primary float-end ms-2">sort</button><button class="dropdown-toggle btn btn-primary float-end">filter</button></h4>
 
-    <li>
-    <a href="<%= `topics/${topic.Title}/posts` %>" class="topic"><%=topic.Title%></a>
-  </li>
-  <% }); %>
+ 
+    <div class="card container-fluid align-items-center">
+      <% if(recentPosts.length == 0){%>
+        <div class="mt-3 mb-3 text-center"> <%=forumName%> has no posts :( </div>
+      <%}else{%>
+      <%recentPosts.forEach((info)=>{%>
+        <div class="card container-fluid">
+          <div class="card-body">
+            <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts`%>"><%=info.topicTitle%></a>: <a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/info.postTitle`%>"><%=info.postTitle%></a></h5>
+            <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
+            <p class="card-text"> <%=info.postContent%> </p>
+          </div>
+        </div>
+      <%});%>
+      <%}%>
+      </div>
+    </div>
 
   
   
@@ -190,7 +207,7 @@
 
 
 
-  </ul>
+
 
   </body>
 </html>

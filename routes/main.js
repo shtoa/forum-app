@@ -394,7 +394,7 @@ app.post("/topics/:topic/join", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect(`/topics/${req.params.topic}/posts`);
+                        res.redirect(`/`);
                         console.log(err)
                     } else {
                         //console.log(req.session)

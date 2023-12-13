@@ -108,7 +108,7 @@ module.exports = function(app, forumData) {
                 }
             });
         } else {
-            res.send('<script>window.location.href = "/"; alert("Please Join Topic to Add Posts"); </script>')
+            res.send(`<script>window.location.href = "./topics/${topic}/posts/${result.insertId}/${newrecord[0]}"; alert("Please Join Topic to Add Posts"); </script>`)
         }
 
     });  

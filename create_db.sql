@@ -31,10 +31,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`users` (
   UNIQUE INDEX `Username` (`Username` ASC) ,
   UNIQUE INDEX `Email` (`Email` ASC) ,
   UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC) )
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 9
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -52,10 +51,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`topics` (
   CONSTRAINT `UserId_topics`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 66
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -78,10 +76,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`posts` (
   CONSTRAINT `UserId_posts`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 41
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -108,10 +105,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`replies` (
   CONSTRAINT `UserId_replies`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 6
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -137,9 +133,8 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`dislikes` (
   CONSTRAINT `UserID_dislikes`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -165,10 +160,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`likes` (
   CONSTRAINT `UserId_likes`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 2
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -189,10 +183,9 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`members` (
   CONSTRAINT `UserID`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 17
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 USE `forum_app` ;
 

@@ -97,7 +97,7 @@
         <%}else {%>
         <% new Set(userTopics.map(({Title})=>Title)).forEach((title)=>{%> <!-- creates a set from the titles -->
   
-            <a href="<%= `topics/${title}/posts` %>" class="topic"><%=title%></a>
+            <a href="<%= `../topics/${title}/posts` %>" class="topic"><%=title%></a>
   
         <% }); %>
         <%}%>

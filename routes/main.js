@@ -394,13 +394,13 @@ app.post("/topics/:topic/join", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect(`./`);
+                        res.redirect(`/`);
                         console.log(err)
                     } else {
                         //console.log(req.session)
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
-                        res.redirect(`/topics/${req.params.topic}/posts`);
+                        res.redirect(`/`);
 
                     }
                 });

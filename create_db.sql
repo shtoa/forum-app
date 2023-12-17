@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema forum_app
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `forum_app`;
+CREATE SCHEMA IF NOT EXISTS `forum_app` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `forum_app` ;
 
 -- -----------------------------------------------------
@@ -27,13 +27,15 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`users` (
   `Email` VARCHAR(100) NOT NULL,
   `FirstName` VARCHAR(45) NOT NULL,
   `LastName` VARCHAR(45) NOT NULL,
+  `adminRights` TINYINT(1) NULL DEFAULT '0',
   PRIMARY KEY (`UserID`),
-  UNIQUE INDEX `Username` (`Username` ASC) ,
-  UNIQUE INDEX `Email` (`Email` ASC) ,
-  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC) )
-
-AUTO_INCREMENT = 9
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  UNIQUE INDEX `Username` (`Username` ASC),
+  UNIQUE INDEX `Email` (`Email` ASC),
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 13
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -45,15 +47,40 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`topics` (
   `UserID` INT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`TopicID`),
-  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC) ,
-  UNIQUE INDEX `TopicID_UNIQUE` (`TopicID` ASC) ,
-  INDEX `UserId_topics` (`UserID` ASC) ,
+  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC),
+  UNIQUE INDEX `TopicID_UNIQUE` (`TopicID` ASC),
+  INDEX `UserId_topics` (`UserID` ASC),
   CONSTRAINT `UserId_topics`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 70
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-AUTO_INCREMENT = 66
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- -----------------------------------------------------
+-- Table `forum_app`.`members`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `forum_app`.`members` (
+  `MemberID` INT NOT NULL AUTO_INCREMENT,
+  `TopicID` INT NOT NULL,
+  `UserID` INT NOT NULL,
+  PRIMARY KEY (`MemberID`),
+  UNIQUE INDEX `MemberID_UNIQUE` (`MemberID` ASC),
+  UNIQUE INDEX `Unique_Combo` (`TopicID` ASC, `UserID` ASC),
+  INDEX `UserID_idx` (`UserID` ASC),
+  INDEX `TopicID_idx` (`TopicID` ASC),
+  CONSTRAINT `TopicID`
+    FOREIGN KEY (`TopicID`)
+    REFERENCES `forum_app`.`topics` (`TopicID`),
+  CONSTRAINT `UserID`
+    FOREIGN KEY (`UserID`)
+    REFERENCES `forum_app`.`users` (`UserID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 34
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -67,18 +94,19 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`posts` (
   `Content` TEXT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`PostID`),
-  UNIQUE INDEX `PostID_UNIQUE` (`PostID` ASC) ,
-  INDEX `TopicId_idx` (`TopicID` ASC) ,
-  INDEX `UserId_idx` (`UserID` ASC) ,
+  UNIQUE INDEX `PostID_UNIQUE` (`PostID` ASC),
+  INDEX `TopicId_idx` (`TopicID` ASC),
+  INDEX `UserId_idx` (`UserID` ASC),
   CONSTRAINT `TopicId_posts`
     FOREIGN KEY (`TopicID`)
     REFERENCES `forum_app`.`topics` (`TopicID`),
   CONSTRAINT `UserId_posts`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 41
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+ENGINE = InnoDB
+AUTO_INCREMENT = 48
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -92,100 +120,20 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`replies` (
   `Content` TEXT NOT NULL,
   `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ReplyID`),
-  UNIQUE INDEX `replyId_UNIQUE` (`ReplyID` ASC) ,
-  INDEX `UserId_replies_idx` (`UserID` ASC) ,
-  INDEX `PostId_replies_idx` (`PostID` ASC) ,
-  INDEX `ParentId_replies_idx` (`ParentID` ASC) ,
-  CONSTRAINT `ParentId_replies`
-    FOREIGN KEY (`ParentID`)
-    REFERENCES `forum_app`.`replies` (`ReplyID`),
+  UNIQUE INDEX `replyId_UNIQUE` (`ReplyID` ASC),
+  INDEX `UserId_replies_idx` (`UserID` ASC),
+  INDEX `PostId_replies_idx` (`PostID` ASC),
+  INDEX `ParentId_replies_idx` (`ParentID` ASC),
   CONSTRAINT `PostId_replies`
     FOREIGN KEY (`PostID`)
     REFERENCES `forum_app`.`posts` (`PostID`),
   CONSTRAINT `UserId_replies`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 6
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `forum_app`.`dislikes`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `forum_app`.`dislikes` (
-  `DislikeID` INT NOT NULL AUTO_INCREMENT,
-  `PostID` INT NOT NULL,
-  `ReplyID` INT NULL DEFAULT NULL,
-  `UserID` INT NOT NULL,
-  `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`DislikeID`),
-  UNIQUE INDEX `DislikeID_UNIQUE` (`DislikeID` ASC) ,
-  INDEX `UserID_dislikes_idx` (`UserID` ASC) ,
-  INDEX `ReplyID_dislikes_idx` (`ReplyID` ASC) ,
-  INDEX `PostID_dislikes_idx` (`PostID` ASC) ,
-  CONSTRAINT `PostID_dislikes`
-    FOREIGN KEY (`PostID`)
-    REFERENCES `forum_app`.`posts` (`PostID`),
-  CONSTRAINT `ReplyID_dislikes`
-    FOREIGN KEY (`ReplyID`)
-    REFERENCES `forum_app`.`replies` (`ReplyID`),
-  CONSTRAINT `UserID_dislikes`
-    FOREIGN KEY (`UserID`)
-    REFERENCES `forum_app`.`users` (`UserID`))
-
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `forum_app`.`likes`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `forum_app`.`likes` (
-  `LikeID` INT NOT NULL AUTO_INCREMENT,
-  `PostID` INT NOT NULL,
-  `UserID` INT NOT NULL,
-  `ReplyID` INT NULL DEFAULT NULL,
-  `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`LikeID`),
-  UNIQUE INDEX `LikeID_UNIQUE` (`LikeID` ASC) ,
-  INDEX `PostId_likes_idx` (`PostID` ASC) ,
-  INDEX `UserId_likes_idx` (`UserID` ASC) ,
-  INDEX `ReplyId_likes_idx` (`ReplyID` ASC) ,
-  CONSTRAINT `PostId_likes`
-    FOREIGN KEY (`PostID`)
-    REFERENCES `forum_app`.`posts` (`PostID`),
-  CONSTRAINT `ReplyId_likes`
-    FOREIGN KEY (`ReplyID`)
-    REFERENCES `forum_app`.`replies` (`ReplyID`),
-  CONSTRAINT `UserId_likes`
-    FOREIGN KEY (`UserID`)
-    REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 2
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `forum_app`.`members`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `forum_app`.`members` (
-  `MemberID` INT NOT NULL AUTO_INCREMENT,
-  `TopicID` INT NOT NULL,
-  `UserID` INT NOT NULL,
-  PRIMARY KEY (`MemberID`),
-  UNIQUE INDEX `MemberID_UNIQUE` (`MemberID` ASC) ,
-  UNIQUE INDEX `Unique_Combo` (`TopicID` ASC, `UserID` ASC) ,
-  INDEX `UserID_idx` (`UserID` ASC) ,
-  INDEX `TopicID_idx` (`TopicID` ASC) ,
-  CONSTRAINT `TopicID`
-    FOREIGN KEY (`TopicID`)
-    REFERENCES `forum_app`.`topics` (`TopicID`),
-  CONSTRAINT `UserID`
-    FOREIGN KEY (`UserID`)
-    REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 17
-ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+ENGINE = InnoDB
+AUTO_INCREMENT = 25
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 USE `forum_app` ;
 
@@ -198,6 +146,11 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`postsauthors` (`postID` INT, `postTitle`
 -- Placeholder table for view `forum_app`.`postsusername`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `forum_app`.`postsusername` (`postID` INT, `postTitle` INT, `postContent` INT, `postCreatedAt` INT, `topicTitle` INT, `topicCreatedAt` INT, `UserID` INT, `Username` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `forum_app`.`repliesusernames`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `forum_app`.`repliesusernames` (`Content` INT, `createdAt` INT, `ReplyID` INT, `PostID` INT, `UserID` INT, `ParentID` INT, `Username` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `forum_app`.`topicsauthors`
@@ -241,6 +194,21 @@ BEGIN
          JOIN users ON users.UserID = userMade.UserID;
     END IF;
   
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure addComment
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addComment`(IN Content TEXT,IN UserID INT,IN PostID INT)
+BEGIN
+
+INSERT INTO Replies (Content, UserID, PostID) VALUES (Content, UserID, PostID);
 
 END$$
 
@@ -291,9 +259,61 @@ BEGIN
 	IF ISNULL(userTopicsCount) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User Has No Created Topics';
     ELSE
-		SELECT * FROM topicsauthors
+		SELECT DISTINCT * FROM topicsauthors
 		JOIN users ON users.UserID = topicsauthors.UserID WHERE topicsauthors.UserID = targetUserID;
     END IF;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure deleteAccount
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccount`(IN deleteUserID INT)
+BEGIN
+
+	DELETE FROM members where UserID = deleteUserID;
+    DELETE FROM posts where UserID = deleteUserID;
+	DELETE FROM topics where UserID = deleteUserID;
+    DELETE FROM replies where UserID = deleteUserID;
+    DELETE FROM users where UserID = deleteUserID;
+    
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure deleteTopic
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteTopic`(IN TopicName VARCHAR(45))
+BEGIN
+
+	SET @TopicID := (SELECT TopicID FROM topics WHERE Title = TopicName);
+    
+    
+    DELETE FROM posts WHERE posts.TopicID = @TopicID;
+    DELETE FROM members WHERE members.TopicID = @TopicID;
+    DELETE FROM topics WHERE Title = TopicName;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure editTopic
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `editTopic`(IN prevTitle VARCHAR(45), IN newTitle VARCHAR(45))
+BEGIN
+	UPDATE topics set Title = newTitle WHERE Title = prevTitle;
 END$$
 
 DELIMITER ;
@@ -329,6 +349,21 @@ END$$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure getComments
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getComments`(IN PostID INT)
+BEGIN
+
+	SELECT * FROM repliesusernames WHERE repliesusernames.PostID = PostID;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- procedure getMemberships
 -- -----------------------------------------------------
 
@@ -352,7 +387,7 @@ USE `forum_app`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPostInfo`(IN PostID INT)
 BEGIN
 
-	SELECT * FROM postsauthors WHERE postsauthors.PostID = PostID;
+	SELECT * FROM postsusername WHERE postsusername.PostID = PostID;
 
 END$$
 
@@ -395,6 +430,23 @@ BEGIN
     
     INSERT INTO members (TopicID, UserID) VALUES (@TopicID, InUserID);
     
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure leaveTopic
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `leaveTopic`(IN InUserID INT, IN TopicName VARCHAR(45))
+BEGIN
+
+	SET @TopicID := (SELECT TopicID FROM topics WHERE Title = TopicName);
+    DELETE FROM members
+    WHERE members.TopicID = @TopicID && members.UserID = InUserID;
+
 END$$
 
 DELIMITER ;
@@ -464,6 +516,13 @@ CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY D
 DROP TABLE IF EXISTS `forum_app`.`postsusername`;
 USE `forum_app`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `forum_app`.`postsusername` AS select `forum_app`.`postsauthors`.`postID` AS `postID`,`forum_app`.`postsauthors`.`postTitle` AS `postTitle`,`forum_app`.`postsauthors`.`postContent` AS `postContent`,`forum_app`.`postsauthors`.`postCreatedAt` AS `postCreatedAt`,`forum_app`.`postsauthors`.`topicTitle` AS `topicTitle`,`forum_app`.`postsauthors`.`topicCreatedAt` AS `topicCreatedAt`,`forum_app`.`postsauthors`.`UserID` AS `UserID`,`forum_app`.`users`.`Username` AS `Username` from (`forum_app`.`postsauthors` join `forum_app`.`users` on((`forum_app`.`postsauthors`.`UserID` = `forum_app`.`users`.`UserID`)));
+
+-- -----------------------------------------------------
+-- View `forum_app`.`repliesusernames`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `forum_app`.`repliesusernames`;
+USE `forum_app`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `forum_app`.`repliesusernames` AS select `forum_app`.`replies`.`Content` AS `Content`,`forum_app`.`replies`.`CreatedAt` AS `createdAt`,`forum_app`.`replies`.`ReplyID` AS `ReplyID`,`forum_app`.`replies`.`PostID` AS `PostID`,`forum_app`.`replies`.`UserID` AS `UserID`,`forum_app`.`replies`.`ParentID` AS `ParentID`,`forum_app`.`users`.`Username` AS `Username` from (`forum_app`.`replies` join `forum_app`.`users` on((`forum_app`.`replies`.`UserID` = `forum_app`.`users`.`UserID`)));
 
 -- -----------------------------------------------------
 -- View `forum_app`.`topicsauthors`

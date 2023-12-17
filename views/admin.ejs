@@ -1,9 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    
     <title>Welcome to <%=forumName%></title>
-
     <link rel="stylesheet"  type="text/css" href="/main.css" />
     <link rel="stylesheet"  type="text/css" href="/css/bootstrap.min.css">
 
@@ -81,8 +79,8 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="/account"> Settings </a>
             <% if(session.admin) {%>
-            <a class="dropdown-item" href="/admin"> Admin </a>
-            <% } %>
+              <a class="dropdown-item" href="/admin"> Admin </a>
+              <% } %>
             <a class="dropdown-item" href="/logout"> Logout </a>
           </div>
           <%} else{%>
@@ -97,73 +95,150 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb ms-4 mt-3">
-      <li class="breadcrumb-item active"><a href="../../">Home</a></li>
+      <li class="breadcrumb-item"><a href="../../../../">Home</a></li>
+      <li class="breadcrumb-item active"><a href="/admin">Admin</a></li>
     </ol>
-  </nav>
-
-  <h1 class="mt-3"><%=forumName%></h1>
-    <!-- <p><a href="/"><%=forumName%></a></p>
-    <p><a href="/search">Search Topics</a></p>
-    <% if(session.user_id) {%>
-
-      <div class="dropdown show">
-        <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Account
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="/account"> Settings </a>
-          <a class="dropdown-item" href="/logout"> Logout </a>
-        </div>
-      </div>
-        
-    <%} else{%>
-
-      <p><a href="/login">Login</a></p>
-
-    <%}%>
-     -->
- 
-     <!-- <button class="dropdown-toggle btn btn-primary float-end ms-2">sort</button><button class="dropdown-toggle btn btn-primary float-end">filter</button> -->
-
-  <h4 class="container-fluid mt-3 mb-3"> Recent Posts </h4>
-
- 
-    <div class="card container-fluid align-items-center">
-      <% if(recentPosts.length == 0){%>
-        <div class="mt-3 mb-3 text-center"> <%=forumName%> has no posts :( </div>
-      <%}else{%>
-      <% for(let i = 10*(page-1); i < Math.min(recentPosts.length, 10*page); i++){%>
-        <%info=recentPosts[i];%>
-        <div class="card container-fluid ">
-          <div class="card-body">
-            <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts`%>"><%=info.topicTitle%></a>: <a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/${info.postTitle}`%>"><%=info.postTitle%></a></h5>
-            <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
-            <p class="card-text"> <%=info.postContent%> </p>
-          </div>
-        </div>
-      <%};%>
-      <%}%>
-      </div>
-    </div>
-
-    <nav aria-label="..." class="container-fluid">
-      <ul class="pagination col justify-content-center mt-3">
-        <% for(let i = 0; i < Math.ceil(recentPosts.length/10); i++){%>
-        <li class="page-item" aria-current="page">
-          <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/?page=${i+1}`%>"><%=i+1%></a>
-        </li>
-        <%}%>
-      </ul>
-    </nav>
-
-  <%console.log(page)%>
-    
-    
-      
-      
-
+  </nav> 
   
+    <!-- Begining of Page-->
+    <% if(session.user_id && session.admin) {%>
+      <h1 class="mt-3 mb-3"> Admin Portal </h1>
 
+
+      <!-- Section Navigation -->
+
+      <ul class="nav nav-tabs d-flex justify-content-center" role="tablist">
+    
+        <%tabList = ["All Topics", "All Users", "All Posts"]%>
+      
+          <% tabList.forEach((tabName)=>{%> 
+          <li class="nav-item">
+            <% console.log(tab)%>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`../admin/?tab=${tabName}`%>"><%=tabName%></a>
+          </li>
+        <%});%>
+
+        <!-- <li class="nav-item">
+          <a class="nav-link" data-bs-target="#Memberships" data-bs-toggle="tab">Memberships</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-target="#Topics" data-bs-toggle="tab">My Topics</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-target="#Posts" data-bs-toggle="tab">My Posts</a>
+        </li> -->
+
+      </ul>
+
+
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+      
+      <!-- Tab for All Posts -->
+
+      <div class="tab-pane fade <%=`${(tab =='All Posts') ? 'show active': ' '}`%>" id="Posts" role="tabpanel" aria-labelledby="v-pills-home-tab">
+        <div class="card container-fluid align-items-center">
+          <% if(allPosts.length == 0){%>
+            <div class="mt-3 mb-3 text-center"> There are no posts :( </div>
+          <%}else{%>
+          <% for(let i = 10*(page-1); i < Math.min(allPosts.length, 10*page); i++){%>
+            <% info = allPosts[i] %>
+            <div class="card container-fluid">
+              <div class="card-body">
+                <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts`%>"><%=info.topicTitle%></a>: <a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/info.postTitle`%>"><%=info.postTitle%></a></h5>
+                <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
+                <p class="card-text"> <%=info.postContent%> </p>
+              </div>
+            </div>
+          <%};%>
+          <%}%>
+          </div>
+
+          <!-- Add Pagination for posts -->
+
+          <nav aria-label="..." class="container-fluid">
+            <ul class="pagination col justify-content-center mt-3">
+              <% for(let i = 0; i < Math.ceil(allPosts.length/10); i++){%>
+              <li class="page-item" aria-current="page">
+                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+              </li>
+              <%}%>
+            </ul>
+          </nav>
+
+          </div>
+
+
+          <div class="tab-pane fade <%=`${(tab =='All Topics') ? 'show active': ' '}`%>" id="All Topics" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <div class="card container-fluid align-items-center">
+              <% if(allTopics.length==0){%>
+                <div class="mt-3 mb-3 text-center"> There are currently no topics :( </div>
+              <%}else {%>
+                <% for(let i = 10*(page-1); i < Math.min(allTopics.length, 10*page); i++){%> <!-- creates a set from the titles -->
+                <% topic = allTopics[i]%>
+                <div class="card container-fluid">
+                  <div class="card-body text-center">
+                  <a href="<%= `../topics/${topic.topicTitle}/posts` %>" class="text-center"><%=topic.topicTitle%></a> by <a href = "<%= `../user/${topic.Username}` %>"><%=topic.Username%></a>
+                  </div>
+                </div>
+        
+              <% }; %>
+              <%}%>
+            </div>
+            <!-- Topics Pagination -->
+            <nav aria-label="..." class="container-fluid">
+              <ul class="pagination col justify-content-center mt-3">
+                <% for(let i = 0; i < Math.ceil(allTopics.length/10); i++){%>
+                <li class="page-item" aria-current="page">
+                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                </li>
+                <%}%>
+              </ul>
+            </nav>
+            </div>
+   
+            <div class="tab-pane fade <%=`${(tab =='All Users') ? 'show active': ' '}`%>" id="All User" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                  <div class="card container-fluid align-items-center">
+                    <% if(allUsers.length==0){%>
+                      <div class="mt-3 mb-3 text-center"> No User Results </div>
+                    <%}else {%>
+                    <% for(let i = 10*(page-1); i < Math.min(allUsers.length, 10*page); i++){%>
+                      <% console.log(allUsers[i]) %>
+                      <% Username = allUsers[i].Username%>
+                      <% console.log(Username)%>
+                      <div class="card container-fluid">
+                        <div class="card-body text-center">
+                        <a href="<%= `/user/${Username}` %>" class="text-center"><%=Username%></a>
+                        </div>
+                      </div>
+              
+                    <% }; %>
+              
+                      <!-- Add Pagination for users -->
+              
+                      
+                    <%}%>
+                
+                  </div>
+                  <nav aria-label="..." class="container-fluid">
+                    <ul class="pagination col justify-content-center mt-3">
+                      <% for(let i = 0; i < Math.ceil(allUsers.length/10); i++){%>
+                      <li class="page-item" aria-current="page">
+                        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                      </li>
+                      <%}%>
+                    </ul>
+                  </nav>
+                </div>
+
+
+    <%}else{%>
+      <h2 class="text-center mt-5"> Sorry this area cannot be accessed</h2> 
+    <%}%>
+
+    <!-- Modals to add topics and posts -->
+    
   
 <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -177,10 +252,9 @@
         <div class="modal-body">
           <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
           <datalist class="mb-3" id="topicSelect">
-            <% new Set(availableTopics.map(({Title})=>Title)).forEach((title)=>{%>
-              
+            <% availableTopics.forEach((topic)=>{%>
               <%{%>
-              <option name="topic" value="<%=title%>"><%=title%></option>
+              <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
               <%}%>
               <%});%>
 
@@ -229,10 +303,6 @@
   </div>
 </div>
 </div>
-
-
-
-
 
 
 

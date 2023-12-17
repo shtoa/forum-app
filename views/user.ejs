@@ -70,6 +70,7 @@
           <button class="btn btn-outline-success form-inline ms-1" type="submit">Search</button>
         </form>
       </li>
+      <li class="nav-item dropdown float-end"> <a class="nav-link d-inline-flex" href="/about"> About </a></li>
         <li class="nav-item dropdown float-end">
           <% if(session.user_id) {%>
           <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,6 +78,9 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="/account"> Settings </a>
+            <% if(session.admin) {%>
+              <a class="dropdown-item" href="/admin"> Admin </a>
+            <% } %>
             <a class="dropdown-item" href="/logout"> Logout </a>
           </div>
           <%} else{%>
@@ -89,37 +93,135 @@
 
   </nav>
   
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb ms-4 mt-3">
+        <li class="breadcrumb-item"><a href="../../../../">Home</a></li>
+        <li class="breadcrumb-item active"><a href="/account">User: <%=accountInfo[0].Username%></a></li>
+      </ol>
+    </nav> 
   
-      <h5 class="mt-5 text-center">User: <%=accountInfo[0].Username%>'s Memberships </h5>
+      <h1 class="mt-3 mb-3 text-center">About User: <%=accountInfo[0].Username%></h1>
+
+        <!-- Section Navigation -->
+
+        <ul class="nav nav-tabs d-flex justify-content-center" role="tablist">
+          
+          <%tabList = ["Posts", "Memberships", "Topics"]%>
+      
+          <% tabList.forEach((tabName)=>{%> 
+          <li class="nav-item">
+            <% console.log(tab)%>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`../../user/${accountInfo[0].Username}/?tab=${tabName}`%>"><%=tabName%></a>
+          </li>
+          <%});%>
+          <!-- <li class="nav-item">
+            <a class="nav-link" data-bs-target="#Memberships" data-bs-toggle="tab" href="/?tab=Memberships">Memberships</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-target="#Topics" data-bs-toggle="tab" href="/?tab=Topics">Topics</a>
+          </li> -->
+        </ul>
+
+
+        <!-- Area for Tab Content -->
+        <div class="tab-content">
+        
+        <!-- Posts Tab -->
+
+        <div class="tab-pane fade <%=`${(tab =='Posts') ? 'show active': ' '}`%>" id="Posts" role="tabpanel" aria-labelledby="v-pills-home-tab">
+          <div class="card container-fluid align-items-center">
+            <% if(userPosts.length == 0){%>
+              <div class="mt-3 mb-3 text-center"> <%=accountInfo[0].Username%> has no posts :( </div>
+            <%}else{%>
+            <% for(let i = 10*(page-1); i < Math.min(userPosts.length, 10*page); i++){%>
+              <% info = userPosts[i] %>
+              <div class="card container-fluid">
+                <div class="card-body">
+                  <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts`%>"><%=info.topicTitle%></a>: <a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/info.postTitle`%>"><%=info.postTitle%></a></h5>
+                  <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
+                  <p class="card-text"> <%=info.postContent%> </p>
+                </div>
+              </div>
+            <%};%>
+            <%}%>
+            </div>
+
+            <!-- Add Pagination for posts -->
+
+            <nav aria-label="..." class="container-fluid">
+              <ul class="pagination col justify-content-center mt-3">
+                <% for(let i = 0; i < Math.ceil(userPosts.length/10); i++){%>
+                <li class="page-item" aria-current="page">
+                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                </li>
+                <%}%>
+              </ul>
+            </nav>
+
+            </div>
+  
+      <!-- Memberships Tab -->
+      
+      <div class="tab-pane fade <%=`${(tab =='Memberships') ? 'show active': ' '}`%>" id="Memberships" role="tabpanel" aria-labelledby="v-pills-home-tab">
       <div class="card container-fluid align-items-center">
-        <% if(userTopics.length==0){%>
+        <% if(userMemberships.length==0){%>
           <div class="mt-3 mb-3 text-center"> <%=accountInfo[0].Username%> has not joined any topics :( </div>
         <%}else {%>
-        <% new Set(userTopics.map(({Title})=>Title)).forEach((title)=>{%> <!-- creates a set from the titles -->
-  
-            <a href="<%= `../topics/${title}/posts` %>" class="topic"><%=title%></a>
-  
-        <% }); %>
-        <%}%>
-      </div>
-      
-      <h5 class="mt-5 text-center">User: <%=accountInfo[0].Username%>'s Posts</h5
-      <div class="card container-fluid align-items-center">
-        <% if(userPosts.length == 0){%>
-          <div class="mt-3 mb-3 text-center"> <%=accountInfo[0].Username%> has no posts :( </div>
-        <%}else{%>
-        <%userPosts.forEach((info)=>{%>
+        <% for(let i = 10*(page-1); i < Math.min(userMemberships.length, 10*page); i++){%> <!-- creates a set from the titles -->
+          <%title = userMemberships[i].Title%>
           <div class="card container-fluid">
-            <div class="card-body">
-              <h5 class="card-title"><a href="<%=`/topics/${info.topicTitle}/posts/${info.postID}/info.postTitle`%>"><%=info.topicTitle%>: <%=info.postTitle%></a></h5>
-              <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${info.Username}`%>"> <%=info.Username%></a> - <%=new Date(info.postCreatedAt).toDateString()%></h6>
-              <p class="card-text"> <%=info.postContent%> </p>
+            <div class="card-body text-center">
+            <a href="<%= `../topics/${title}/posts` %>" class="text-center"><%=title%></a>
             </div>
           </div>
-        <%});%>
+        <% }; %>
         <%}%>
-        </div>
       </div>
+      <!-- Membership Pagination-->
+      <nav aria-label="..." class="container-fluid">
+        <ul class="pagination col justify-content-center mt-3">
+          <% for(let i = 0; i < Math.ceil(userMemberships.length/10); i++){%>
+          <li class="page-item" aria-current="page">
+            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+          </li>
+          <%}%>
+        </ul>
+      </nav>
+      </div>
+
+      <!-- Topics Tab -->
+
+      <div class="tab-pane fade <%=`${(tab =='Topics') ? 'show active': ' '}`%>" id="Topics" role="tabpanel" aria-labelledby="v-pills-home-tab">
+        <div class="card container-fluid align-items-center">
+          <% if(userTopics.length==0){%>
+            <div class="mt-3 mb-3 text-center"> <%=accountInfo[0].Username%> has not joined any topics :( </div>
+          <%}else {%>
+            <% for(let i = 10*(page-1); i < Math.min(userTopics.length, 10*page); i++){%> <!-- creates a set from the titles -->
+            <% topicTitle = userTopics[i].topicTitle %>
+            <div class="card container-fluid">
+              <div class="card-body text-center">
+              <a href="<%= `../topics/${topicTitle}/posts` %>" class="text-center"><%=topicTitle%></a>
+              </div>
+            </div>
+    
+          <% }; %>
+          <%}%>
+        </div>
+        <!-- Topics Pagination -->
+        <nav aria-label="..." class="container-fluid">
+          <ul class="pagination col justify-content-center mt-3">
+            <% for(let i = 0; i < Math.ceil(userTopics.length/10); i++){%>
+            <li class="page-item" aria-current="page">
+              <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+            </li>
+            <%}%>
+          </ul>
+        </nav>
+        </div>
+
+
+
+    
 
       <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

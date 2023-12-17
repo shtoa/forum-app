@@ -71,6 +71,7 @@
           <button class="btn btn-outline-success form-inline ms-1" type="submit">Search</button>
         </form>
       </li>
+      <li class="nav-item dropdown float-end"> <a class="nav-link d-inline-flex" href="/about"> About </a></li>
         <li class="nav-item dropdown float-end">
           <% if(session.user_id) {%>
           <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -78,6 +79,9 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="/account"> Settings </a>
+            <% if(session.admin) {%>
+              <a class="dropdown-item" href="/admin"> Admin </a>
+            <% } %>
             <a class="dropdown-item" href="/logout"> Logout </a>
           </div>
           <%} else{%>

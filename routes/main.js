@@ -5,16 +5,32 @@ module.exports = function(app, forumData) {
     // Handle our routes
     app.get('/',function(req,res){
 
-        let topicsQuery = "CALL getAvailableTopics(); CALL getRecentPosts;"; // query database to get all the books
+        let topicsQuery = "CALL getAvailableTopics(); CALL getRecentPosts;"; 
                 // execute sql query
                 db.query(topicsQuery,[1,2],(err, results) => {
                     if (err) {
                         res.redirect('../'); 
                         console.log(err)
                     }
-                    let topicData = Object.assign({}, forumData, {availableTopics:results[0],recentPosts:results[2], session: req.session});
+                    let topicData = Object.assign({}, forumData, {availableTopics:results[0],recentPosts:results[2], session: req.session, page: req.query.page ?? 1});
             
                     res.render('index.ejs', topicData)
+                });
+     
+    });
+
+    app.get('/about',function(req,res){
+
+        let topicsQuery = "CALL getAvailableTopics();"; 
+                // execute sql query
+                db.query(topicsQuery,(err, results) => {
+                    if (err) {
+                        res.redirect('../'); 
+                        console.log(err)
+                    }
+                    let topicData = Object.assign({}, forumData, {availableTopics:results[0], session: req.session});
+            
+                    res.render('about.ejs', topicData)
                 });
      
     });
@@ -29,7 +45,7 @@ module.exports = function(app, forumData) {
                         res.redirect('../'); 
                         console.log(err)
                     }
-                    let postsData = Object.assign({}, forumData, {availablePosts:results[0], topic: req.params.topic,session: req.session, availableTopics:results[1]});
+                    let postsData = Object.assign({}, forumData, {availablePosts:results[0], topic: req.params.topic,session: req.session, availableTopics:results[1], page: req.query.page ?? 1});
             
                     res.render('posts.ejs', postsData)
                 
@@ -40,17 +56,17 @@ module.exports = function(app, forumData) {
 
     app.get("/topics/:topic/posts/:postid/:post",function(req,res){
         
-        let postQuery = `CALL getPostInfo("${req.params.postid}"); CALL getAvailableTopics();`; // remove password
+        let postQuery = `CALL getPostInfo("${req.params.postid}"); CALL getAvailableTopics(); CALL getComments(${req.params.postid})`; 
 
 
 
-        db.query(postQuery,[1,2], (err, results) => {
+        db.query(postQuery,[1,2,3], (err, results) => {
             if (err) {
                 res.redirect('../'); 
                 console.log(err)
             }
-            //console.log(result);
-            let postData = Object.assign({}, forumData, {post:results[0], topic: req.params.topic,session: req.session, availableTopics: results[2]});
+            //console.log(results[4]);
+            let postData = Object.assign({}, forumData, {post:results[0], topic: req.params.topic,session: req.session, availableTopics: results[2], comments: results[4], page: req.query.page ?? 1});
     
             res.render('post.ejs', postData);
         
@@ -74,6 +90,30 @@ module.exports = function(app, forumData) {
         });
 
     });    
+
+
+    app.post('/commentadded', function (req,res) {
+        // saving data in database
+
+        const regex = /(?<=posts\/)(.*)(?=\/)/i;
+        var PostID = regex.exec(req.get('Referrer'))[0];
+
+        console.log(req.body.comment);
+        let addcomment = `CALL addComment("${req.body.comment}",${req.session.user_id},${PostID});`;
+        
+        db.query(addcomment, (err, result) => {
+            if (err) {
+            return console.error(err.message);
+            } else {
+                res.redirect(req.get('Referrer'));
+            }
+        });
+        
+
+
+    });   
+
+
 
     app.post('/postadded', function (req,res) {
         
@@ -130,7 +170,11 @@ module.exports = function(app, forumData) {
                         console.log(err)
                     }
 
-                    let searchData = Object.assign({}, forumData, {topicResults: results[0], postTitleResults: results[2], postContentsResults: results[4], userResults: results[6], availableTopics: results[8], keyword: req.query.keyword, session: req.session});
+                    if(req.query.results == "Topics"){
+                        console.log("hello");
+                    }
+
+                    let searchData = Object.assign({}, forumData, {topicResults: results[0], postTitleResults: results[2], postContentsResults: results[4], userResults: results[6], availableTopics: results[8], keyword: req.query.keyword, session: req.session, page: req.query.page ?? 1, tab: req.query.tab ?? "Topics"});
                     res.render("searchresult.ejs", searchData)
                  });
     });
@@ -215,6 +259,7 @@ app.post("/login", function(req,res,next){
 
             if(result[0].Password == user_password){
                 req.session.user_id = result[0].UserID;
+                req.session.admin = result[0].adminRights;
                 
                 let membershipQuery = `CALL getMemberships(${result[0].UserID})`;
 
@@ -252,20 +297,41 @@ app.get('/logout',function(req,res,next){
                   
 app.get('/account',function(req,res){
     // this breaks if there arent any posts
-    let accountQuery = `CALL getAccountInfo(${req.session.user_id}); CALL checkUsersPosts(${req.session.user_id}); CALL checkUsersTopics(${req.session.user_id});`
+    let accountQuery = `CALL getAccountInfo(${req.session.user_id}); CALL checkUsersPosts(${req.session.user_id}); CALL checkUsersTopics(${req.session.user_id}); CALL getAvailableTopics();`
 
-         db.query(accountQuery, [1,2,3],(err, result) => {
+         db.query(accountQuery, [1,2,3,4],(err, result) => {
             if (err) {
             return console.error(err.message);
             } else {
                 //console.log(result[2]);
-                let accountData = Object.assign({}, forumData, {accountInfo: result[0], availablePosts: result[2], availableTopics: result[4], session: req.session});
+                let accountData = Object.assign({}, forumData, {accountInfo: result[0], accountPosts: result[2], accountTopics: result[4], availableTopics: result[6],session: req.session, page: req.query.page ?? 1, tab: req.query.tab ?? "Details"});
                 console.log("----")
                 console.log(accountData.availableTopics);
                 console.log("----")
                 res.render('account.ejs',accountData)
             }
         });
+
+   
+
+})
+
+app.get('/admin',function(req,res){
+    // this breaks if there arent any posts
+
+    let adminQuery = "SELECT * FROM topicsauthors JOIN users ON topicsauthors.UserID = users.UserID; SELECT * FROM postsusername; SELECT * FROM users; CALL getAvailableTopics();"
+
+         db.query(adminQuery, [1,2,3,4],(err, result) => {
+            if (err) {
+            return console.error(err.message);
+            } else {
+                console.log(result[2]);
+                let adminData = Object.assign({}, forumData, {allTopics: result[0], allPosts: result[1], allUsers: result[2], availableTopics: result[3], session: req.session, page: req.query.page ?? 1, tab: req.query.tab ?? "All Topics"});
+                res.render('admin.ejs',adminData)
+            }
+        });
+
+   
 
    
 
@@ -279,7 +345,7 @@ app.get('/user/:username',function(req,res){
     
   
 
-    Forum_UserID = db.query(userIDQuery, [1,2],(err, results) => {
+    Forum_UserID = db.query(userIDQuery, [1,2,3],(err, results) => {
         if (err) {
             return console.error(err.message);
             } else {
@@ -289,14 +355,14 @@ app.get('/user/:username',function(req,res){
                 var availableTopics = results[1];
                 
                 
-                let userQuery = `CALL getAccountInfo(${UserID}); CALL checkUsersPosts(${UserID}); CALL getMemberships(${UserID});`
+                let userQuery = `CALL getAccountInfo(${UserID}); CALL checkUsersPosts(${UserID}); CALL getMemberships(${UserID}); CALL checkUsersTopics(${UserID});`
 
                 db.query(userQuery, (err, result) => {
                     if (err) {
                         return console.error(err.message);
                     } else {
 
-                        let accountData = Object.assign({}, forumData, {accountInfo: result[0], userPosts: result[2], userTopics: result[4], availableTopics: availableTopics, session: req.session});
+                        let accountData = Object.assign({}, forumData, {accountInfo: result[0], userPosts: result[2], userMemberships: result[4], userTopics: result[6],availableTopics: availableTopics, session: req.session, page: req.query.page ?? 1, tab: req.query.tab ?? "Posts"});
                         res.render('user.ejs',accountData)
                     }
                 });
@@ -323,7 +389,7 @@ app.post('/account/change/:property',function(req,res){
                 
                 if(req.params.property == "password"){
                     if(result[0].Password != req.body.oldpassword){
-                        res.send('<script>window.location.href = "./"; alert("Wrong Old Password"); </script>');
+                        res.send('<script>window.location.href = "../"; alert("Wrong Old Password"); </script>');
                     } else {
                         let userUpdated = `UPDATE users set ${req.params.property.charAt(0).toUpperCase() + req.params.property.slice(1)} = "${req.body.newpassword}" where UserID = "${req.session.user_id}"`
                         
@@ -331,7 +397,7 @@ app.post('/account/change/:property',function(req,res){
                             if (err) {
                                 return console.error(err.message);
                             }else{
-                                res.send('<script>window.location.href = "./"; alert("Password Changed"); </script>');
+                                res.send('<script>window.location.href = "../"; alert("Password Changed"); </script>');
                             }
                         });
             }
@@ -381,6 +447,45 @@ app.post('/topics/:topicTitle/posts/:postID/delete',function(req,res){
 
 })
 
+app.post('/account/delete',function(req,res){
+
+    let deletePost = `CALL deleteAccount("${req.session.user_id}");`;
+    db.query(deletePost, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+            res.redirect("../../");
+        }
+    });
+
+})
+
+app.post('/topics/:topicTitle/delete',function(req,res){
+
+    let deletePost = `CALL deleteTopic("${req.params.topicTitle}");`;
+    db.query(deletePost, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+            res.redirect("../");
+        }
+    });
+
+})
+
+app.post('/topics/:topicTitle/edit',function(req,res){
+
+    let deletePost = `CALL editTopic("${req.params.topicTitle}","${req.body.newtitle}");`;
+    db.query(deletePost, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+            res.redirect("../../../../account");
+        }
+    });
+
+})
+
 app.post("/topics/:topic/join", function(req,res,next){
 
     let joinTopic = `CALL joinTopic(${req.session.user_id},"${req.params.topic}");`;
@@ -401,6 +506,35 @@ app.post("/topics/:topic/join", function(req,res,next){
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
                         res.redirect(`../../topics/${req.params.topic}/posts`);
+
+                    }
+                });
+            
+        }
+    });
+
+});
+
+app.post("/topics/:topic/leave", function(req,res,next){
+
+    let joinTopic = `CALL leaveTopic(${req.session.user_id},"${req.params.topic}");`;
+
+    db.query(joinTopic, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+
+            let membershipQuery = `CALL getMemberships(${req.session.user_id})`;
+
+                db.query(membershipQuery, (err, result) => {
+                    if (err) {
+                        res.redirect(`../../account`);
+                        console.log(err)
+                    } else {
+                        //console.log(req.session)
+                        req.session.memberships = result[0];
+                        console.log(req.session.memberships);
+                        res.redirect(`../../account`);
 
                     }
                 });

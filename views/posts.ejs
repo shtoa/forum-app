@@ -115,7 +115,7 @@
   <div class="card container-fluid align-items-center">
   
     <% if(availablePosts.length == 0) {%>
-      <p class="mt-5">no posts :( add a new post</p>
+      <p class="card-text">no posts :( add a new post</p>
     <%}%>
     
   
@@ -138,6 +138,8 @@
 
   <% }; %>
 
+</div>
+
   <nav aria-label="..." class="container-fluid">
     <ul class="pagination col justify-content-center mt-3">
       <% for(let i = 0; i < Math.ceil(availablePosts.length/10); i++){%>
@@ -151,7 +153,7 @@
 <%console.log(page)%>
 
 
-</div>
+
 
 <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">

@@ -526,6 +526,8 @@ DROP TABLE IF EXISTS `forum_app`.`topicsauthors`;
 USE `forum_app`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `forum_app`.`topicsauthors` AS select `forum_app`.`topics`.`Title` AS `topicTitle`,`forum_app`.`topics`.`CreatedAt` AS `topicCreatedAt`,`forum_app`.`topics`.`UserID` AS `UserID` from `forum_app`.`topics`;
 
+INSERT IGNORE INTO users (Password,Username,Email,Firstname,Lastname, adminRights) VALUES ("admin","admin","admin@admin.com","admin","admin",1);
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

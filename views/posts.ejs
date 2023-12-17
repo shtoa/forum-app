@@ -107,7 +107,7 @@
   <div class= "container-fluid align-items-center">
     <div class = "row d-flex">
       <!-- check if already inside topic to see join button -->
-      <h1 class="mt-3 mb-5 container-fluid text-center">Topic: <%=topic%> </h1><% if((session.user_id) && !session.memberships.some((membership)=>(membership.Title == topic))) {%>  <form action="/topics/${post.topicTitle}/join" method="POST"><button class="btn btn-primary container-fluid" type="submit" >join +</button></form>  <%}%>
+      <h1 class="mt-3 mb-5 container-fluid text-center">Topic: <%=topic%> </h1><% if((session.user_id) && !session.memberships.some((membership)=>(membership.Title == topic))) {%>  <form action="/topics/${topic}/join" method="POST"><button class="btn btn-primary container-fluid" type="submit" >join +</button></form>  <%}%>
     </div>
   </div>
 

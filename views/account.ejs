@@ -215,7 +215,7 @@
       <div class="tab-pane fade <%=`${(tab =='Memberships') ? 'show active': ' '}`%>" id="Memberships" role="tabpanel" aria-labelledby="v-pills-home-tab">
       <div class="card container-fluid align-items-center">
       <% if(session.memberships.length==0){%>
-        <div class="mt-3 mb-3 text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topicModal" role="button" type="button">join topic</button></div>
+        <div class="mt-3 mb-3 text-center"> Join a Topic to Begin Posting! </div>
       <%}else {%>
         <% for(let i = 10*(page-1); i < Math.min(session.memberships.length, 10*page); i++){%> 
         <% title = session.memberships[i].Title %> 

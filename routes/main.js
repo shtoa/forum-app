@@ -9,7 +9,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(topicsQuery,[1,2],(err, results) => {
                     if (err) {
-                        res.redirect('../'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let topicData = Object.assign({}, forumData, {availableTopics:results[0],recentPosts:results[2], session: req.session, page: req.query.page ?? 1});
@@ -25,7 +25,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(topicsQuery,(err, results) => {
                     if (err) {
-                        res.redirect('../'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let topicData = Object.assign({}, forumData, {availableTopics:results[0], session: req.session});
@@ -42,7 +42,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(postsQuery,[1,2],(err, results) => {
                     if (err) {
-                        res.redirect('../'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
                     let postsData = Object.assign({}, forumData, {availablePosts:results[0], topic: req.params.topic,session: req.session, availableTopics:results[1], page: req.query.page ?? 1});
@@ -62,7 +62,7 @@ module.exports = function(app, forumData) {
 
         db.query(postQuery,[1,2,3], (err, results) => {
             if (err) {
-                res.redirect('../'); 
+                res.redirect('/'); 
                 console.log(err)
             }
             //console.log(results[4]);
@@ -85,7 +85,7 @@ module.exports = function(app, forumData) {
             if (err) {
             return console.error(err.message);
             } else {
-                res.redirect(`./topics/${newrecord[0]}/posts`)
+                res.redirect(`/topics/${newrecord[0]}/posts`)
             }
         });
 
@@ -144,11 +144,11 @@ module.exports = function(app, forumData) {
                 return console.error(err.message);
     
                 } else {
-                    res.redirect(`./topics/${topic}/posts/${result.insertId}/${newrecord[0]}`)
+                    res.redirect(`/topics/${topic}/posts/${result.insertId}/${newrecord[0]}`)
                 }
             });
         } else {
-            res.send(`<script>window.location.href = "./topics/${topic}/posts"; alert("Please Join Topic to Add Posts"); </script>`)
+            res.send(`<script>window.location.href = "/topics/${topic}/posts"; alert("Please Join Topic to Add Posts"); </script>`)
         }
 
     });  
@@ -166,7 +166,7 @@ module.exports = function(app, forumData) {
                 // execute sql query
                 db.query(sqlquery, [1,2,3,4,5], (err, results) => {
                     if (err) {
-                        res.redirect('../'); 
+                        res.redirect('/'); 
                         console.log(err)
                     }
 
@@ -186,7 +186,7 @@ module.exports = function(app, forumData) {
         // execute sql query
         db.query(sqlquery, (err, result) => {
             if (err) {
-                res.redirect('../',forumData); 
+                res.redirect('/',forumData); 
                 console.log(err)
             }
             let searchData = Object.assign({}, forumData, {availableResults:result, keyword: req.query.keyword, session: req.session});
@@ -200,7 +200,7 @@ app.get("/login", function(req,res){
 
     db.query(topicQuery, (err, result) => {
         if (err) {
-            res.redirect('../',forumData); 
+            res.redirect('/',forumData); 
             console.log(err)
         }
         let loginData = Object.assign({}, forumData, {session: req.session, availableTopics: result[0]});
@@ -218,7 +218,7 @@ app.get("/register", function(req,res){
 
     db.query(topicQuery, (err, result) => {
         if (err) {
-            res.redirect('../',forumData); 
+            res.redirect('/',forumData); 
             console.log(err)
         }
         let registerData = Object.assign({}, forumData, {session: req.session, availableTopics: result[0]});
@@ -236,7 +236,7 @@ app.post("/registered", function(req,res){
         if (err) {
         return console.error(err.message);
         } else {
-            res.redirect("./login")
+            res.redirect("/login")
         }
     });
 })
@@ -253,7 +253,7 @@ app.post("/login", function(req,res,next){
         let loginQuery = `SELECT * from users where Email = "${user_email}"`;
         db.query(loginQuery, (err, result) => {
             if (err) {
-                res.redirect('./'); 
+                res.redirect('/'); 
                 console.log(err)
             }
 
@@ -265,25 +265,25 @@ app.post("/login", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect('./'); 
+                        res.redirect('/'); 
                         console.log(err)
                     } else {
                         //console.log(req.session)
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
-                        res.redirect("./")
+                        res.redirect("/")
 
                     }
                 });
 
             } else {
-                res.send('<script>window.location.href = "./login"; alert("Incorrect Email or Password"); </script>')
+                res.send('<script>window.location.href = "/login"; alert("Incorrect Email or Password"); </script>')
             }
          });
 
     } else {
 
-        res.send('<script>window.location.href = "./"; alert("Please Enter Email and Password"); </script>');
+        res.send('<script>window.location.href = "/"; alert("Please Enter Email and Password"); </script>');
     }
 
 })
@@ -291,7 +291,7 @@ app.post("/login", function(req,res,next){
 app.get('/logout',function(req,res,next){
     
     req.session.destroy();
-    res.redirect("./")
+    res.redirect("/")
 
 })
                   
@@ -389,7 +389,7 @@ app.post('/account/change/:property',function(req,res){
                 
                 if(req.params.property == "password"){
                     if(result[0].Password != req.body.oldpassword){
-                        res.send('<script>window.location.href = "../"; alert("Wrong Old Password"); </script>');
+                        res.send('<script>window.location.href = "/account"; alert("Wrong Old Password"); </script>');
                     } else {
                         let userUpdated = `UPDATE users set ${req.params.property.charAt(0).toUpperCase() + req.params.property.slice(1)} = "${req.body.newpassword}" where UserID = "${req.session.user_id}"`
                         
@@ -397,7 +397,7 @@ app.post('/account/change/:property',function(req,res){
                             if (err) {
                                 return console.error(err.message);
                             }else{
-                                res.send('<script>window.location.href = "../"; alert("Password Changed"); </script>');
+                                res.send('<script>window.location.href = "/account"; alert("Password Changed"); </script>');
                             }
                         });
             }
@@ -408,7 +408,7 @@ app.post('/account/change/:property',function(req,res){
                         if (err) {
                             return console.error(err.message);
                         } else{
-                            res.redirect("../");
+                            res.redirect("/account");
                         }
                     });
                 }
@@ -428,7 +428,7 @@ app.post('/topics/:topicTitle/posts/:postID/edit',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect("/account");
         }
     });
 
@@ -441,7 +441,7 @@ app.post('/topics/:topicTitle/posts/:postID/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect("/account");
         }
     });
 
@@ -454,7 +454,7 @@ app.post('/account/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../");
+            res.redirect("/");
         }
     });
 
@@ -467,7 +467,7 @@ app.post('/topics/:topicTitle/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../");
+            res.redirect("/account");
         }
     });
 
@@ -480,7 +480,7 @@ app.post('/topics/:topicTitle/edit',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect("/account");
         }
     });
 
@@ -499,13 +499,13 @@ app.post("/topics/:topic/join", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect(`../../topics/${req.params.topic}/posts`);
+                        res.redirect(`/topics/${req.params.topic}/posts`);
                         console.log(err)
                     } else {
                         //console.log(req.session)
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
-                        res.redirect(`../../topics/${req.params.topic}/posts`);
+                        res.redirect(`/topics/${req.params.topic}/posts`);
 
                     }
                 });
@@ -528,13 +528,13 @@ app.post("/topics/:topic/leave", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect(`../../account`);
+                        res.redirect(`/account`);
                         console.log(err)
                     } else {
                         //console.log(req.session)
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
-                        res.redirect(`../../account`);
+                        res.redirect(`/account`);
 
                     }
                 });

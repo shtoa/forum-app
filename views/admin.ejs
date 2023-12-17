@@ -95,8 +95,8 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb ms-4 mt-3">
-      <li class="breadcrumb-item"><a href="../../../../">Home</a></li>
-      <li class="breadcrumb-item active"><a href="/admin">Admin</a></li>
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active"><a href="">Admin</a></li>
     </ol>
   </nav> 
   
@@ -114,7 +114,7 @@
           <% tabList.forEach((tabName)=>{%> 
           <li class="nav-item">
             <% console.log(tab)%>
-            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`../admin/?tab=${tabName}`%>"><%=tabName%></a>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`/admin/?tab=${tabName}`%>"><%=tabName%></a>
           </li>
         <%});%>
 
@@ -161,7 +161,7 @@
             <ul class="pagination col justify-content-center mt-3">
               <% for(let i = 0; i < Math.ceil(allPosts.length/10); i++){%>
               <li class="page-item" aria-current="page">
-                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
               </li>
               <%}%>
             </ul>
@@ -179,7 +179,7 @@
                 <% topic = allTopics[i]%>
                 <div class="card container-fluid">
                   <div class="card-body text-center">
-                  <a href="<%= `../topics/${topic.topicTitle}/posts` %>" class="text-center"><%=topic.topicTitle%></a> by <a href = "<%= `../user/${topic.Username}` %>"><%=topic.Username%></a>
+                  <a href="<%= `/topics/${topic.topicTitle}/posts` %>" class="text-center"><%=topic.topicTitle%></a> by <a href = "<%= `/user/${topic.Username}` %>"><%=topic.Username%></a>
                   </div>
                 </div>
         
@@ -191,7 +191,7 @@
               <ul class="pagination col justify-content-center mt-3">
                 <% for(let i = 0; i < Math.ceil(allTopics.length/10); i++){%>
                 <li class="page-item" aria-current="page">
-                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
                 </li>
                 <%}%>
               </ul>
@@ -225,7 +225,7 @@
                     <ul class="pagination col justify-content-center mt-3">
                       <% for(let i = 0; i < Math.ceil(allUsers.length/10); i++){%>
                       <li class="page-item" aria-current="page">
-                        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/admin/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
                       </li>
                       <%}%>
                     </ul>

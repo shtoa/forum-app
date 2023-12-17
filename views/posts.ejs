@@ -124,7 +124,7 @@
  
     <div class="card container-fluid">
       <div class="card-body">
-        <h5 class="card-title"><a href="<%=`/topics/${post.topicTitle}/posts/${post.PostID}/${post.postTitle}` %>"><%=post.postTitle%></a></h5>
+        <h5 class="card-title"><a href="<%=`/topics/${topic}/posts/${post.PostID}/${post.postTitle}` %>"><%=post.postTitle%></a></h5>
         <h6 class="card-subtitle mb-3 small"> by <a class="nav-item" href="<%=`/user/${post.Username}`%>"> <%=post.Username%></a> - <%=new Date(post.createdAt).toDateString()%></h6>
         <p class="card-text"> <%=post.postContent%> </p>
       </div>

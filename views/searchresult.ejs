@@ -27,7 +27,7 @@
             <input type=text class="dropdown-item" id="searchSelector" placeholder="search topics...">
             <% availableTopics.forEach((topic)=>{%>
       
-              <a class="dropdown-item" href="<%= `topics/${topic.Title}/posts` %>"><%=topic.Title%></a>
+              <a class="dropdown-item" href="<%= `/topics/${topic.Title}/posts` %>"><%=topic.Title%></a>
           
             <% }); %>
           </div>
@@ -146,7 +146,7 @@
           <% title = topicResults[i].topicTitle%>
           <div class="card container-fluid">
             <div class="card-body text-center">
-            <a href="<%= `topics/${title}/posts` %>" class="text-center"><%=title%></a>
+            <a href="<%= `/topics/${title}/posts` %>" class="text-center"><%=title%></a>
             </div>
           </div>
         <% }; %>

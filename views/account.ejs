@@ -27,7 +27,7 @@
             <input type=text class="dropdown-item" id="searchSelector" placeholder="search topics...">
             <% availableTopics.forEach((topic)=>{%>
       
-              <a class="dropdown-item" href="<%= `topics/${topic.Title}/posts` %>"><%=topic.Title%></a>
+              <a class="dropdown-item" href="<%= `/topics/${topic.Title}/posts` %>"><%=topic.Title%></a>
           
             <% }); %>
           </div>
@@ -221,7 +221,7 @@
         <% title = session.memberships[i].Title %> 
         <div class="card container-fluid">
           <div class="card-body text-center">
-          <a href="<%= `topics/${title}/posts` %>" class="text-center"><%=title%></a>
+          <a href="<%= `/topics/${title}/posts` %>" class="text-center"><%=title%></a>
           <div class="d-inline-flex">
           <button class="dropdown-toggle btn" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
@@ -288,7 +288,7 @@
         <% title = accountTopics[i].topicTitle%>
         <div class="card container-fluid">
           <div class="card-body text-center">
-          <a href="<%= `topics/${title}/posts` %>" class="text-center"><%=title%></a>
+          <a href="<%= `/topics/${title}/posts` %>" class="text-center"><%=title%></a>
 
           <button class="dropdown-toggle btn" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>

@@ -78,14 +78,18 @@ module.exports = function(app, forumData) {
  
     app.post('/topicadded', function (req,res) {
         // saving data in database
-        let sqlquery = `INSERT INTO topics (Title, UserID) VALUES (?,"${req.session.user_id}")`;
+        let sqlquery = `SELECT * FROM topics; INSERT INTO topics (Title, UserID) VALUES ("${req.body.topic}",${req.session.user_id});`;
         // execute sql query
-        let newrecord = [req.body.topic];
-        db.query(sqlquery, newrecord, (err, result) => {
+        db.query(sqlquery, [1,2], (err, result) => {
             if (err) {
-            return console.error(err.message);
+                if(Object(result[0]).some((topic)=>(topic.Title == req.body.topic))){
+                    res.send(`<script>window.location.href = "/topics/${req.body.topic}/posts"; alert("This Topic Already Exists"); </script>`)
+                } 
+
+                return console.error(err.message);
+        
             } else {
-                res.redirect(`./topics/${newrecord[0]}/posts`)
+                res.redirect(`./topics/${req.body.topic}/posts`)
             }
         });
 
@@ -133,9 +137,14 @@ module.exports = function(app, forumData) {
             var topic = req.body.topic;
         }
 
+        if(!req.session.memberships.some((membership)=>(membership.Title == topic))){
+            res.send(`<script>window.location.href = "./topics/${topic}/posts"; alert("Please Join Topic to Add Posts"); </script>`);
+        } else{
+
+
         // check if user is member 
 
-        if(req.session.memberships.some((membership)=>(membership.Title == topic))){
+        
             // execute sql query
             let newrecord = [req.body.title, req.body.content];
             db.query(sqlquery, newrecord, (err, result) => {
@@ -144,12 +153,12 @@ module.exports = function(app, forumData) {
                 return console.error(err.message);
     
                 } else {
+                    
                     res.redirect(`./topics/${topic}/posts/${result.insertId}/${newrecord[0]}`)
-                }
+                    }  
             });
-        } else {
-            res.send(`<script>window.location.href = "./topics/${topic}/posts"; alert("Please Join Topic to Add Posts"); </script>`)
         }
+     
 
     });  
     
@@ -216,12 +225,19 @@ app.get("/register", function(req,res){
 
     let topicQuery = "CALL getAvailableTopics();"
 
-    db.query(topicQuery, (err, result) => {
+    db.query(topicQuery,(err, result) => {
         if (err) {
             res.redirect('../',forumData); 
             console.log(err)
         }
+
+
+
         let registerData = Object.assign({}, forumData, {session: req.session, availableTopics: result[0]});
+
+
+      
+
         res.render("register.ejs",registerData);
      });
 
@@ -229,17 +245,46 @@ app.get("/register", function(req,res){
 })
 
 app.post("/registered", function(req,res){
-    let newrecord = [req.body.password, req.body.username, req.body.email,req.body.firstname,req.body.lastname];
-    let sqlquery = `INSERT INTO users (Password,Username,Email,Firstname,Lastname) VALUES (?,?,?,?,?)`;
+    
+    let userQuery = "SELECT * FROM users;"
 
-    db.query(sqlquery, newrecord, (err, result) => {
+    db.query(userQuery,(err, result) => {
         if (err) {
-        return console.error(err.message);
+            res.redirect('../',forumData); 
+            console.log(err)
         } else {
-            res.redirect("./login")
-        }
-    });
-})
+
+    if(Object(result).some((user)=>(user.Username == req.body.username)) && Object(result).some((user)=>((user.Email == req.body.email)))){
+        res.send(`<script>window.location.href = "${req.get('Referrer')}"; alert("Username and Email Already Exist"); </script>`);
+    } else if (Object(result).some((user)=>((user.Email == req.body.email)))){
+
+        res.send(`<script>window.location.href = "${req.get('Referrer')}"; alert("Email Already Exists"); </script>`);  
+
+    } else if (Object(result).some((user)=>((user.Username == req.body.username)))) {
+
+        res.send(`<script>window.location.href = "${req.get('Referrer')}"; alert("Username Already Exists"); </script>`);  
+
+    } else {
+    
+        let newrecord = [req.body.password, req.body.username, req.body.email,req.body.firstname,req.body.lastname];
+        let registerQuery = ` INSERT INTO users (Password,Username,Email,Firstname,Lastname) VALUES (?,?,?,?,?);`;
+
+        db.query(registerQuery, newrecord,(err, result) => {
+            if (err) {
+            return console.error(err.message);
+            } else {
+
+                res.redirect("./login")
+
+                
+
+        
+            }
+        });
+    }
+    }
+});
+});
 
 app.post("/login", function(req,res,next){
 
@@ -253,11 +298,17 @@ app.post("/login", function(req,res,next){
         let loginQuery = `SELECT * from users where Email = "${user_email}"`;
         db.query(loginQuery, (err, result) => {
             if (err) {
-                res.redirect('./'); 
-                console.log(err)
+                
+                return console.log(err)
+            } else {
+
+                console.log(result);
+            
+            if (result.length == 0){
+                res.send('<script>window.location.href = "./login"; alert("Incorrect Email or Password"); </script>') 
             }
 
-            if(result[0].Password == user_password){
+            else if(result[0].Password == user_password){
                 req.session.user_id = result[0].UserID;
                 req.session.admin = result[0].adminRights;
                 
@@ -279,6 +330,8 @@ app.post("/login", function(req,res,next){
             } else {
                 res.send('<script>window.location.href = "./login"; alert("Incorrect Email or Password"); </script>')
             }
+
+        }
          });
 
     } else {
@@ -428,7 +481,7 @@ app.post('/topics/:topicTitle/posts/:postID/edit',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect(req.get('Referrer'));
         }
     });
 
@@ -441,11 +494,42 @@ app.post('/topics/:topicTitle/posts/:postID/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect(req.get('Referrer'));
         }
     });
 
 })
+
+
+app.post('/topics/:topicTitle/posts/:PostID/comment/:ReplyID/delete',function(req,res){
+
+    let deleteComment = `CALL deleteComment(${req.params.ReplyID},${req.session.user_id});`;
+    db.query(deleteComment, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+            res.redirect(req.get('Referrer'));
+        }
+    });
+
+})
+
+
+app.post('/topics/:topicTitle/posts/:PostID/comment/:ReplyID/edit',function(req,res){
+
+    let deleteComment = `CALL editComment("${req.body.newcontent}",${req.params.ReplyID},${req.session.user_id});`;
+    db.query(deleteComment, (err, result) => {
+        if (err) {
+            return console.error(err.message);
+        } else{
+            res.redirect(req.get('Referrer'));
+        }
+    });
+
+})
+
+
+
 
 app.post('/account/delete',function(req,res){
 
@@ -454,7 +538,7 @@ app.post('/account/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../");
+            res.redirect("/logout");
         }
     });
 
@@ -467,7 +551,7 @@ app.post('/topics/:topicTitle/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../");
+            res.redirect(req.get('Referrer'));
         }
     });
 
@@ -480,7 +564,7 @@ app.post('/topics/:topicTitle/edit',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("../../../../account");
+            res.redirect(req.get('Referrer'));
         }
     });
 
@@ -528,13 +612,13 @@ app.post("/topics/:topic/leave", function(req,res,next){
 
                 db.query(membershipQuery, (err, result) => {
                     if (err) {
-                        res.redirect(`../../account`);
+                        res.redirect(req.get('Referrer'));
                         console.log(err)
                     } else {
                         //console.log(req.session)
                         req.session.memberships = result[0];
                         console.log(req.session.memberships);
-                        res.redirect(`../../account`);
+                        res.redirect(req.get('Referrer'));
 
                     }
                 });

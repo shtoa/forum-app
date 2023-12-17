@@ -1,5 +1,6 @@
 # Create database script for My4uM
 
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -22,9 +23,9 @@ USE `forum_app` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `forum_app`.`users` (
   `UserID` INT NOT NULL AUTO_INCREMENT,
-  `Username` VARCHAR(50) NOT NULL,
-  `Password` VARCHAR(255) NOT NULL,
-  `Email` VARCHAR(100) NOT NULL,
+  `Username` VARCHAR(45) NOT NULL,
+  `Password` VARCHAR(45) NOT NULL,
+  `Email` VARCHAR(45) NOT NULL,
   `FirstName` VARCHAR(45) NOT NULL,
   `LastName` VARCHAR(45) NOT NULL,
   `adminRights` TINYINT(1) NULL DEFAULT '0',
@@ -32,8 +33,7 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`users` (
   UNIQUE INDEX `Username` (`Username` ASC),
   UNIQUE INDEX `Email` (`Email` ASC),
   UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC))
-
-AUTO_INCREMENT = 13
+AUTO_INCREMENT = 17
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -42,7 +42,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `forum_app`.`topics` (
   `TopicID` INT NOT NULL AUTO_INCREMENT,
-  `Title` VARCHAR(255) NOT NULL,
+  `Title` VARCHAR(45) NOT NULL,
   `UserID` INT NOT NULL,
   `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`TopicID`),
@@ -52,8 +52,7 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`topics` (
   CONSTRAINT `UserId_topics`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 70
+AUTO_INCREMENT = 103
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -75,10 +74,8 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`members` (
   CONSTRAINT `UserID`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 34
+AUTO_INCREMENT = 43
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 -- -----------------------------------------------------
 -- Table `forum_app`.`posts`
@@ -100,8 +97,7 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`posts` (
   CONSTRAINT `UserId_posts`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 48
+AUTO_INCREMENT = 56
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
@@ -126,8 +122,7 @@ CREATE TABLE IF NOT EXISTS `forum_app`.`replies` (
   CONSTRAINT `UserId_replies`
     FOREIGN KEY (`UserID`)
     REFERENCES `forum_app`.`users` (`UserID`))
-
-AUTO_INCREMENT = 25
+AUTO_INCREMENT = 35
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 USE `forum_app` ;
@@ -271,11 +266,41 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccount`(IN deleteUserID INT)
 BEGIN
 
 	DELETE FROM members where UserID = deleteUserID;
+	DELETE FROM replies where UserID = deleteUserID;
     DELETE FROM posts where UserID = deleteUserID;
 	DELETE FROM topics where UserID = deleteUserID;
-    DELETE FROM replies where UserID = deleteUserID;
     DELETE FROM users where UserID = deleteUserID;
     
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure deleteComment
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteComment`(IN DeleteReplyID INT, IN UserID INT)
+BEGIN
+
+	DELETE FROM replies WHERE ReplyID = DeleteReplyID && UserID = UserID;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure deleteComments
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteComments`(IN DeleteReplyID INT)
+BEGIN
+
+	DELETE FROM replies WHERE replies.ReplyID = DeleteReplyID;
+
 END$$
 
 DELIMITER ;
@@ -296,6 +321,19 @@ BEGIN
     DELETE FROM members WHERE members.TopicID = @TopicID;
     DELETE FROM topics WHERE Title = TopicName;
 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure editComment
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `forum_app`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `editComment`(IN newContent TEXT, IN CommentID INT, IN UserID INT)
+BEGIN
+	UPDATE replies set Content = newContent WHERE ReplyID = CommentID && UserID = UserID;
 END$$
 
 DELIMITER ;
@@ -525,8 +563,6 @@ CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY D
 DROP TABLE IF EXISTS `forum_app`.`topicsauthors`;
 USE `forum_app`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `forum_app`.`topicsauthors` AS select `forum_app`.`topics`.`Title` AS `topicTitle`,`forum_app`.`topics`.`CreatedAt` AS `topicCreatedAt`,`forum_app`.`topics`.`UserID` AS `UserID` from `forum_app`.`topics`;
-
-INSERT IGNORE INTO users (Password,Username,Email,Firstname,Lastname, adminRights) VALUES ("admin","admin","admin@admin.com","admin","admin",1);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

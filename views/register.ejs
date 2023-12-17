@@ -100,23 +100,23 @@
     <form method="POST" action="/registered">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">FirstName</label>
-        <input type="text" id="firstname" type="text" name="firstname" placeholder="John" class="form-control" aria-describedby="emailHelp" required>
+        <input type="text" id="firstname" type="text" name="firstname" placeholder="John" class="form-control" maxlength="45" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Lastname</label>
-        <input id="lastname" type="text" name="lastname" placeholder="Deer" class="form-control" aria-describedby="emailHelp" required>
+        <input id="lastname" type="text" name="lastname" placeholder="Deer" class="form-control"  maxlength="45" maxlength="45" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email</label>
-        <input input id="email" type="email" name="email" placeholder="John-Deer@example.com" class="form-control" aria-describedby="emailHelp" required>
+        <input input id="email" type="email" name="email" placeholder="John-Deer@example.com" class="form-control" maxlength="45" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Username</label>
-        <input id="username" type="text" name="username" placeholder="JohnDeer123" class="form-control" aria-describedby="emailHelp" required>
+        <input id="username" type="text" name="username" placeholder="JohnDeer123" class="form-control"  maxlength="45" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Password</label>
-        <input id="password" type="password" name="password" placeholder="password" class="form-control" aria-describedby="emailHelp" required>
+        <input id="password" type="password" name="password" placeholder="password" class="form-control" maxlength="45" required>
         <div class="form-text">Have an account? <span><a href="/login">login</a></span></div>
       </div>
       <button type="submit" class="btn btn-primary">Register</button>
@@ -135,7 +135,7 @@
         <input type="submit" value="Register" />
       </form> -->
   </body>
-  <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="postModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -145,12 +145,12 @@
         <form action="/postadded" method="POST">
           <div class="form-group">
           <div class="modal-body">
-            <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
+            <input type="text" class="form-control mb-3" placeholder="Enter Topic" id="topic" name="topic" maxlength="45" required>
             <datalist class="mb-3" id="topicSelect">
-              <% new Set(availableTopics.map(({Title})=>Title)).forEach((title)=>{%>
-                
+              <% availableTopics.forEach((topic)=>{%>
+                  
                 <%{%>
-                <option name="topic" value="<%=title%>"><%=title%></option>
+                <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
                 <%}%>
                 <%});%>
   
@@ -161,7 +161,7 @@
          
     
           
-            <input type="text" class="form-control mb-3" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" required>
+            <input type="text" class="form-control mb-3" id="title" name="title" placeholder="Enter Title" maxlength="45" required>
             <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
         </div>
        
@@ -175,7 +175,7 @@
     </div>
   </div>
   </div>
-  <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="topicModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -186,7 +186,7 @@
           <div class="form-group">
           <div class="modal-body">
          
-            <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+            <input type="text" class="form-control" id="topic" name="topic" placeholder="Enter Topic" maxlength="45" required>
     
         </div>
         <div class="modal-footer">

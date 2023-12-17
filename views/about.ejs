@@ -11,6 +11,8 @@
   </head>
   <body>
 
+    <!-- Nav Bar -->
+
     <nav class="navbar navbar-dark bg-dark navbar-expand-sm container-fluid">
     
      
@@ -24,7 +26,7 @@
           <a class="nav-link dropdown-toggle" role="button" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Topics
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="overflow-x: hidden; overflow-y:hidden; max-height: 105px;" id ="dropmenu">
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="overflow-x: hidden; overflow-y:hidden; max-height: 105px;" id ="dropmenu">
             <input type=text class="dropdown-item" id="searchSelector" placeholder="search topics...">
             <% availableTopics.forEach((topic)=>{%>
       
@@ -33,7 +35,7 @@
             <% }); %>
           </div>
           <script>
-            //https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_filters_list&stacked=h
+            //code from: https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_filters_list&stacked=h
             $(document).ready(function(){
               $("#searchSelector").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
@@ -104,9 +106,7 @@
 
     <h1 class="mt-3">Welcome to <%=forumName%></h1>
 
-  
-    <p> </p>
-    
+
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">A Brief Introduction</h5>
@@ -116,6 +116,51 @@
       </div>
     </div>
 
+
+
+    
+
+  
+    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> What would you like to post? </h5>
+            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="/postadded" method="POST">
+            <div class="form-group">
+            <div class="modal-body">
+              <input type="text" class="form-control mb-3" placeholder="Enter Topic" id="topic" name="topic" maxlength="45" required>
+              <datalist class="mb-3" id="topicSelect">
+                <% availableTopics.forEach((topic)=>{%>
+                  
+                  <%{%>
+                  <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
+                  <%}%>
+                  <%});%>
+    
+    
+              </datalist>
+              
+              
+           
+      
+            
+              <input type="text" class="form-control mb-3" id="title" name="title" placeholder="Enter Title" maxlength="45" required>
+              <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
+          </div>
+         
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input class="btn btn-primary" type="submit" value="Add">
+          </div>
+    
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -128,7 +173,7 @@
             <div class="form-group">
             <div class="modal-body">
            
-              <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+              <input type="text" class="form-control" id="topic" name="topic" placeholder="Enter Topic" maxlength="45" required>
       
           </div>
           <div class="modal-footer">

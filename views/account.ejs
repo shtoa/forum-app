@@ -163,13 +163,13 @@
                 <div class="form-group">
                 <div class="modal-body">
                   <%if(key == "Email"){%><div class="modal-content mb-3 text-center"><%=`Change from: ${value}`%></div> 
-                  <input type="email" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>" aria-describedby="emailHelp" placeholder="Enter <%=`${key}`%>" required>
+                  <input type="email" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>"  placeholder="Enter <%=`${key}`%>" maxlength="45" required>
                   <%}else if(key != "Password"){%>
                     <div class="modal-content mb-3 text-center"><%=`Change from: ${value}`%></div> 
-                  <input type="text" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>" aria-describedby="emailHelp" placeholder="Enter <%=`${key}`%>" required>
+                  <input type="text" class="form-control" id="<%=`${key}`%>" name="<%=`${key}`%>"  placeholder="Enter <%=`${key}`%>" maxlength="45" required>
                   <%} else {%>
-                    <input type="password" class="form-control mb-3" id="oldpassword" name="oldpassword" aria-describedby="emailHelp" placeholder="Enter Old <%=`${key}`%>" required>
-                    <input type="password" class="form-control" id="newpassword" name="newpassword" aria-describedby="emailHelp" placeholder="Enter New <%=`${key}`%>" required>
+                    <input type="password" class="form-control mb-3" id="oldpassword" name="oldpassword"  placeholder="Enter Old <%=`${key}`%>" maxlength="45" required>
+                    <input type="password" class="form-control" id="newpassword" name="newpassword"  placeholder="Enter New <%=`${key}`%>" maxlength="45" required>
                   <%}%>
                  
           
@@ -338,7 +338,7 @@
               <form action="<%=`/topics/${title}/edit`%>" method="POST">
                 <div class="form-group">
                 <div class="modal-body">
-                    <input class="form-control mb-3" id="newtitle" name="newtitle" type="text" value="<%=title%>">
+                    <input class="form-control mb-3" id="newtitle" name="newtitle" type="text" value="<%=title%>" maxlength="45">
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -415,7 +415,7 @@
               <form action="<%=`/topics/${info.topicTitle}/posts/${info.postID}/edit`%>" method="POST">
                 <div class="form-group">
                 <div class="modal-body">
-                    <input class="form-control mb-3" id="newtitle" name="newtitle" type="text" value="<%=info.postTitle%>">
+                    <input class="form-control mb-3" id="newtitle" name="newtitle" type="text" value="<%=info.postTitle%>" maxlength="45">
                     <textarea class="form-control mb-3" id="newcontent" name="newcontent"><%=info.postContent%></textarea>
               </div>
               <div class="modal-footer">
@@ -486,13 +486,14 @@
       <form action="/postadded" method="POST">
         <div class="form-group">
         <div class="modal-body">
-          <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
+          <input type="text" class="form-control mb-3"  placeholder="Enter Topic" id="topic" name="topic" maxlength="45" required>
           <datalist class="mb-3" id="topicSelect">
-            <% availableTopics.forEach((topic)=>{%>
-              <%{%>
-              <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
-              <%}%>
-              <%});%>
+         <% availableTopics.forEach((topic)=>{%>
+                  
+                  <%{%>
+                  <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
+                  <%}%>
+                  <%});%>
 
 
           </datalist>
@@ -501,7 +502,7 @@
        
   
         
-          <input type="text" class="form-control mb-3" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" required>
+          <input type="text" class="form-control mb-3" id="title" name="title"  placeholder="Enter Title" maxlength="45" required>
           <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
       </div>
      
@@ -526,7 +527,7 @@
         <div class="form-group">
         <div class="modal-body">
        
-          <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+          <input type="text" class="form-control" id="topic" name="topic"  placeholder="Enter Topic" maxlength="45" required>
   
       </div>
       <div class="modal-footer">

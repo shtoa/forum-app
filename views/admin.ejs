@@ -250,7 +250,7 @@
       <form action="/postadded" method="POST">
         <div class="form-group">
         <div class="modal-body">
-          <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
+          <input type="text" class="form-control mb-3"  placeholder="Enter Topic" id="topic" name="topic" maxlength="45" required>
           <datalist class="mb-3" id="topicSelect">
             <% availableTopics.forEach((topic)=>{%>
               <%{%>
@@ -265,7 +265,7 @@
        
   
         
-          <input type="text" class="form-control mb-3" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" required>
+          <input type="text" class="form-control mb-3" id="title" name="title"  placeholder="Enter Title" maxlength="45" required>
           <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
       </div>
      
@@ -290,7 +290,7 @@
         <div class="form-group">
         <div class="modal-body">
        
-          <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+          <input type="text" class="form-control" id="topic" name="topic"  placeholder="Enter Topic" maxlength="45" required>
   
       </div>
       <div class="modal-footer">

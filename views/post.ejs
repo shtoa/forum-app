@@ -149,6 +149,79 @@
           <h6 class="card-subtitle mb-3 small"> <a class="nav-item" href="<%=`/user/${comment.Username}`%>"> <%=comment.Username%></a> - <%=new Date(comment.createdAt).toDateString()%></h6>
           <p class="card-text"> <%=comment.Content%> </p>
         </div>
+        <% if (comment.UserID == session.user_id){%>
+          <!-- item to edit comment-->
+          <div class="card-footer container-fluid" id="collapseComments" style="background-color: #f8f9fa;">
+            <button class="card-text dropdown-toggle btn" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+              <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+            </svg></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a role="button" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete<%=`${comment.ReplyID}`%>">Delete Comment <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+              </svg></a></li>
+              <li>
+                <a role="button" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#change<%=`${comment.ReplyID}`%>">Edit Comment <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+              </svg></a>
+        
+              
+            </li> 
+            
+              
+              
+            </ul>
+          </div>
+
+          <!-- Add modals to change and delete comments -->
+
+           <!-- Modal to Edit the Post -->
+        <div class="modal fade" id="change<%=`${comment.ReplyID}`%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Edit your Comment </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="<%=`/topics/${post[0].topicTitle}/posts/${comment.PostID}/comment/${comment.ReplyID}/edit`%>" method="POST">
+                <div class="form-group">
+                <div class="modal-body">
+                    <textarea class="form-control mb-3" id="newcontent" name="newcontent"><%=comment.Content%></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Change">
+              </div>
+        
+            </form>
+            </div>
+          </div>
+        </div>
+        </div>
+        <!-- Modal to Delete the Post -->
+        <div class="modal fade" id="delete<%=`${comment.ReplyID}`%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Are you sure you want to delete your comment? </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="<%=`/topics/${post[0].topicTitle}/posts/${comment.PostID}/comment/${comment.ReplyID}/delete`%>" method="POST">
+                <div class="form-group">
+              <!-- Align items to Center -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="Delete">
+              </div>
+        
+            </form>
+            </div>
+          </div>
+        </div>
+        </div>
+        
+
+        <%}%>
       </div>
     <%};%>
     <%}%>
@@ -214,12 +287,12 @@
         <form action="/postadded" method="POST">
           <div class="form-group">
           <div class="modal-body">
-            <input type="text" class="form-control mb-3" aria-describedby="emailHelp" placeholder="Enter Topic" id="topic" name="topic" required>
+            <input type="text" class="form-control mb-3"  placeholder="Enter Topic" id="topic" name="topic" maxlength="45" required>
             <datalist class="mb-3" id="topicSelect">
-              <% new Set(availableTopics.map(({Title})=>Title)).forEach((title)=>{%>
-                
+              <% availableTopics.forEach((topic)=>{%>
+                  
                 <%{%>
-                <option name="topic" value="<%=title%>"><%=title%></option>
+                <option name="topic" value="<%=topic.Title%>"><%=topic.Title%></option>
                 <%}%>
                 <%});%>
   
@@ -230,7 +303,7 @@
          
     
           
-            <input type="text" class="form-control mb-3" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" required>
+            <input type="text" class="form-control mb-3" id="title" name="title"  placeholder="Enter Title" maxlength="45" required>
             <textarea type="text" class="form-control mb-3" id="content" name="content" placeholder="Content" rows="4" required></textarea>
         </div>
        
@@ -255,7 +328,7 @@
           <div class="form-group">
           <div class="modal-body">
          
-            <input type="text" class="form-control" id="topic" name="topic" aria-describedby="emailHelp" placeholder="Enter Topic" required>
+            <input type="text" class="form-control" id="topic" name="topic"  placeholder="Enter Topic" maxlength="45" required>
     
         </div>
         <div class="modal-footer">

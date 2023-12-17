@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema forum_app
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `forum_app` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `forum_app`;
 USE `forum_app` ;
 
 -- -----------------------------------------------------

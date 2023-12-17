@@ -171,7 +171,7 @@
           <%title = userMemberships[i].Title%>
           <div class="card container-fluid">
             <div class="card-body text-center">
-            <a href="<%= `../topics/${title}/posts` %>" class="text-center"><%=title%></a>
+            <a href="<%= `/topics/${title}/posts` %>" class="text-center"><%=title%></a>
             </div>
           </div>
         <% }; %>
@@ -200,7 +200,7 @@
             <% topicTitle = userTopics[i].topicTitle %>
             <div class="card container-fluid">
               <div class="card-body text-center">
-              <a href="<%= `../topics/${topicTitle}/posts` %>" class="text-center"><%=topicTitle%></a>
+              <a href="<%= `/topics/${topicTitle}/posts` %>" class="text-center"><%=topicTitle%></a>
               </div>
             </div>
     

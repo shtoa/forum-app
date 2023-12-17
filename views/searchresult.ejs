@@ -95,7 +95,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb ms-4 mt-3">
-      <li class="breadcrumb-item"><a href="../../../../">Home</a></li>
+      <li class="breadcrumb-item"><a href="../">Home</a></li>
       <li class="breadcrumb-item active"><a href="<%=`/search-result?keyword=${keyword}`%>">Search: <%=keyword%></a></li>
     </ol>
   </nav> 
@@ -113,7 +113,7 @@
         <% tabList.forEach((tabName)=>{%> 
           <li class="nav-item">
             <% console.log(tab)%>
-            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`../search-result?keyword=${keyword}&tab=${tabName}`%>"><%=tabName%></a>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`/search-result?keyword=${keyword}&tab=${tabName}`%>"><%=tabName%></a>
           </li>
         <%});%>
 
@@ -159,7 +159,7 @@
         <ul class="pagination col justify-content-center mt-3">
           <% for(let i = 0; i < Math.ceil(topicResults.length/10); i++){%>
           <li class="page-item" aria-current="page">
-            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
           </li>
           <%}%>
         </ul>
@@ -195,7 +195,7 @@
     <ul class="pagination col justify-content-center mt-3">
       <% for(let i = 0; i < Math.ceil(postTitleResults.length/10); i++){%>
       <li class="page-item" aria-current="page">
-        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
       </li>
       <%}%>
     </ul>
@@ -232,7 +232,7 @@
   <ul class="pagination col justify-content-center mt-3">
     <% for(let i = 0; i < Math.ceil(postContentsResults.length/10); i++){%>
     <li class="page-item" aria-current="page">
-      <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+      <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
     </li>
     <%}%>
   </ul>
@@ -264,7 +264,7 @@
           <ul class="pagination col justify-content-center mt-3">
             <% for(let i = 0; i < Math.ceil(userResults.length/10); i++){%>
             <li class="page-item" aria-current="page">
-              <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+              <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/search-result?keyword=${keyword}&tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
             </li>
             <%}%>
           </ul>

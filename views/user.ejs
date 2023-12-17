@@ -111,7 +111,7 @@
           <% tabList.forEach((tabName)=>{%> 
           <li class="nav-item">
             <% console.log(tab)%>
-            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`./user/${accountInfo[0].Username}/?tab=${tabName}`%>"><%=tabName%></a>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`/user/${accountInfo[0].Username}/?tab=${tabName}`%>"><%=tabName%></a>
           </li>
           <%});%>
           <!-- <li class="nav-item">
@@ -152,7 +152,7 @@
               <ul class="pagination col justify-content-center mt-3">
                 <% for(let i = 0; i < Math.ceil(userPosts.length/10); i++){%>
                 <li class="page-item" aria-current="page">
-                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`./user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                  <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
                 </li>
                 <%}%>
               </ul>
@@ -182,7 +182,7 @@
         <ul class="pagination col justify-content-center mt-3">
           <% for(let i = 0; i < Math.ceil(userMemberships.length/10); i++){%>
           <li class="page-item" aria-current="page">
-            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`./user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
           </li>
           <%}%>
         </ul>
@@ -212,7 +212,7 @@
           <ul class="pagination col justify-content-center mt-3">
             <% for(let i = 0; i < Math.ceil(userTopics.length/10); i++){%>
             <li class="page-item" aria-current="page">
-              <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`./user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+              <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/user/${accountInfo[0].Username}/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
             </li>
             <%}%>
           </ul>

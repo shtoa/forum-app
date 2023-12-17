@@ -98,7 +98,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb ms-4 mt-3">
-      <li class="breadcrumb-item"><a href="../../">Home</a></li>
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
       <li class="breadcrumb-item active"><a href=""><%=topic%></a></li>
     </ol>
   </nav>
@@ -144,7 +144,7 @@
     <ul class="pagination col justify-content-center mt-3">
       <% for(let i = 0; i < Math.ceil(availablePosts.length/10); i++){%>
       <li class="page-item" aria-current="page">
-        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/?page=${i+1}`%>"><%=i+1%></a>
+        <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`./?page=${i+1}`%>"><%=i+1%></a>
       </li>
       <%}%>
     </ul>

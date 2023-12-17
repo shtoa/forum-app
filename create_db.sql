@@ -203,7 +203,7 @@ USE `forum_app`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addComment`(IN Content TEXT,IN UserID INT,IN PostID INT)
 BEGIN
 
-INSERT INTO Replies (Content, UserID, PostID) VALUES (Content, UserID, PostID);
+INSERT INTO replies (Content, UserID, PostID) VALUES (Content, UserID, PostID);
 
 END$$
 

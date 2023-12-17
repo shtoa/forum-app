@@ -95,8 +95,8 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb ms-4 mt-3">
-      <li class="breadcrumb-item"><a href="../../../../">Home</a></li>
-      <li class="breadcrumb-item active"><a href="/account">Account: <%=accountInfo[0].Username%></a></li>
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active"><a href="">Account: <%=accountInfo[0].Username%></a></li>
     </ol>
   </nav> 
   
@@ -109,7 +109,7 @@
 
       <ul class="nav nav-tabs d-flex justify-content-center" role="tablist">
         <li class="nav-item">
-          <a class="nav-link <%=`${(tab =='Details') ? 'show active': ''}`%>" href="<%=`../../account/?tab=Details`%>">Details</a>
+          <a class="nav-link <%=`${(tab =='Details') ? 'show active': ''}`%>" href="<%=`/account/?tab=Details`%>">Details</a>
         </li>
 
         <%tabList = ["Posts", "Memberships", "Topics"]%>
@@ -117,7 +117,7 @@
           <% tabList.forEach((tabName)=>{%> 
           <li class="nav-item">
             <% console.log(tab)%>
-            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`../../account/?tab=${tabName}`%>"><%=tabName%></a>
+            <a class="nav-link <%=`${(tabName == tab) ? 'active' : ''}`%>" href="<%=`/account/?tab=${tabName}`%>"><%=tabName%></a>
           </li>
         <%});%>
 
@@ -267,7 +267,7 @@
             <ul class="pagination col justify-content-center mt-3">
               <% for(let i = 0; i < Math.ceil(session.memberships.length/10); i++){%>
               <li class="page-item" aria-current="page">
-                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
               </li>
               <%}%>
             </ul>
@@ -358,7 +358,7 @@
             <ul class="pagination col justify-content-center mt-3">
               <% for(let i = 0; i < Math.ceil(accountTopics.length/10); i++){%>
               <li class="page-item" aria-current="page">
-                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+                <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
               </li>
               <%}%>
             </ul>
@@ -459,7 +459,7 @@
         <ul class="pagination col justify-content-center mt-3">
           <% for(let i = 0; i < Math.ceil(accountPosts.length/10); i++){%>
           <li class="page-item" aria-current="page">
-            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`../../account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
+            <a class="<%=`page-link ${(page==(i+1))? 'active': ' '}`%>" href="<%=`/account/?tab=${tab}&page=${i+1}`%>"><%=i+1%></a>
           </li>
           <%}%>
         </ul>

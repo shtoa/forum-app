@@ -538,7 +538,7 @@ app.post('/account/delete',function(req,res){
         if (err) {
             return console.error(err.message);
         } else{
-            res.redirect("/logout");
+            res.redirect("../../logout");
         }
     });
 
